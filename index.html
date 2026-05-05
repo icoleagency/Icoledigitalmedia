@@ -1,399 +1,382 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Icole Digital Media — AI Agency</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root{
+  --bg:#07080d;
+  --bg2:#0c0e18;
+  --panel:#111420;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);
+  --white:#f0f2ff;
+  --muted:rgba(240,242,255,0.5);
+  --muted2:rgba(240,242,255,0.28);
+  --blue:#3b6ff5;
+  --blue2:#5b8bff;
+  --violet:#8b5cf6;
+  --cyan:#22d3ee;
+  --glow:rgba(59,111,245,0.35);
+  --serif:'Syne',sans-serif;
+  --sans:'Inter',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:var(--sans);font-weight:400;overflow-x:hidden;cursor:none;}
 
-  :root {
-    --bg-base: #080B14;
-    --bg-card: #0F1422;
-    --bg-elevated: #1A2035;
-    --border: rgba(255,255,255,0.07);
-    --border-bright: rgba(255,255,255,0.13);
-    --purple: #8B5CF6;
-    --purple-light: #C4B5FD;
-    --purple-dark: #6D28D9;
-    --pink: #EC4899;
-    --pink-light: #F9A8D4;
-    --orange: #F97316;
-    --orange-light: #FED7AA;
-    --teal: #14B8A6;
-    --teal-light: #99F6E4;
-    --blue: #3B82F6;
-    --yellow: #F59E0B;
-    --text-primary: #F1F5F9;
-    --text-secondary: #94A3B8;
-    --text-muted: #475569;
-    --nav-h: 70px;
-  }
+/* CURSOR */
+#cur{position:fixed;width:10px;height:10px;background:var(--blue2);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;}
+#cur-ring{position:fixed;width:38px;height:38px;border:1px solid rgba(91,139,255,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .1s ease-out,width .2s,height .2s;}
 
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Inter', sans-serif; color: var(--text-primary); background: var(--bg-base); line-height: 1.6; overflow-x: hidden; }
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--bg);z-index:9000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .8s,visibility .8s;}
+#loader.hide{opacity:0;visibility:hidden;}
+.l-logo{font-family:var(--serif);font-size:2.6rem;font-weight:800;color:var(--white);letter-spacing:-1px;}
+.l-logo span{background:linear-gradient(90deg,var(--blue),var(--violet),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.l-line{width:220px;height:1px;background:rgba(255,255,255,0.08);position:relative;overflow:hidden;}
+.l-line::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--blue),var(--violet));animation:lload 1.6s ease forwards;}
+@keyframes lload{from{transform:translateX(-100%);}to{transform:translateX(0);}}
+.l-pct{font-family:var(--mono);font-size:0.7rem;letter-spacing:3px;color:var(--muted2);}
 
-  /* ─── REVEAL ─── */
-  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1); }
-  .reveal.visible { opacity: 1; transform: none; }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-  .reveal-delay-4 { transition-delay: 0.4s; }
-  .reveal-delay-5 { transition-delay: 0.5s; }
-  .reveal-delay-6 { transition-delay: 0.6s; }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:28px 5%;transition:all .4s;}
+nav.scrolled{background:rgba(7,8,13,0.9);backdrop-filter:blur(20px);padding:18px 5%;border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--serif);font-size:1.5rem;font-weight:800;color:var(--white);text-decoration:none;letter-spacing:-0.5px;}
+.nav-logo span{background:linear-gradient(135deg,var(--blue2),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;gap:40px;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.82rem;font-weight:500;letter-spacing:0.3px;transition:color .2s;}
+.nav-links a:hover{color:var(--white);}
+.nav-cta{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;padding:11px 26px;font-size:0.78rem;font-weight:600;text-decoration:none;border-radius:6px;font-family:var(--mono);letter-spacing:0.3px;transition:opacity .2s,transform .2s;box-shadow:0 0 24px var(--glow);}
+.nav-cta:hover{opacity:0.88;transform:translateY(-1px);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:22px;height:1.5px;background:var(--white);}
 
-  /* ─── NAV ─── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
-    height: var(--nav-h);
-    background: rgba(8,11,20,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    padding: 0 2.5rem;
-    gap: 2rem;
-    animation: navSlideDown 0.6s cubic-bezier(.22,1,.36,1) both;
-  }
-  @keyframes navSlideDown { from { transform: translateY(-100%); opacity:0; } to { transform: translateY(0); opacity:1; } }
+/* ====== HERO ====== */
+#hero{position:relative;height:100vh;min-height:700px;display:flex;align-items:center;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1920&q=90');background-size:cover;background-position:center;transform:scale(1.05);animation:bgZoom 18s ease-in-out infinite alternate;}
+@keyframes bgZoom{from{transform:scale(1.05);}to{transform:scale(1.12);}}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(7,8,13,0.88) 0%,rgba(7,8,13,0.6) 50%,rgba(7,8,13,0.75) 100%);}
+.hero-overlay2{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,8,13,1) 0%,transparent 50%);}
+/* Animated particle dots */
+.hero-particles{position:absolute;inset:0;overflow:hidden;}
+.hero-particles::before{content:'';position:absolute;width:2px;height:2px;background:var(--blue2);border-radius:50%;box-shadow:
+  120px 200px 0 var(--blue2),300px 80px 0 var(--violet),500px 300px 0 var(--cyan),
+  700px 150px 0 var(--blue2),900px 400px 0 var(--violet),1100px 100px 0 var(--cyan),
+  200px 500px 0 var(--cyan),600px 450px 0 var(--blue2),800px 350px 0 var(--violet),
+  1300px 200px 0 var(--blue2),1500px 350px 0 var(--cyan),1700px 180px 0 var(--violet),
+  400px 600px 0 var(--violet),1000px 550px 0 var(--cyan),1400px 480px 0 var(--blue2);
+  animation:particles 8s ease-in-out infinite alternate;opacity:0.6;}
+@keyframes particles{from{opacity:0.3;transform:translateY(0);}to{opacity:0.7;transform:translateY(-10px);}}
+.hero-content{position:relative;z-index:2;padding:0 5%;max-width:700px;opacity:0;transform:translateY(40px);animation:fadeUp 1s ease 1.8s forwards;}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+.hero-tag{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(91,139,255,0.3);padding:8px 18px;border-radius:100px;margin-bottom:32px;background:rgba(59,111,245,0.08);backdrop-filter:blur(10px);}
+.tag-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.tag-txt{font-family:var(--mono);font-size:0.68rem;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;}
+.hero-h1{font-family:var(--serif);font-size:clamp(2.4rem,5.5vw,5rem);font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bottom:28px;}
+.hero-h1 .line2{display:block;background:linear-gradient(135deg,var(--blue2),var(--violet),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:1.05rem;color:var(--muted);line-height:1.78;max-width:520px;margin-bottom:48px;font-weight:300;}
+.hero-actions{display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
+.btn-glow{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;padding:16px 40px;font-family:var(--mono);font-size:0.8rem;font-weight:600;letter-spacing:0.5px;text-decoration:none;border-radius:8px;transition:transform .2s,box-shadow .2s;box-shadow:0 0 32px var(--glow);display:inline-block;}
+.btn-glow:hover{transform:translateY(-2px);box-shadow:0 0 48px rgba(59,111,245,0.5);}
+.btn-ghost{color:var(--white);font-family:var(--mono);font-size:0.8rem;font-weight:500;letter-spacing:0.5px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;padding:16px 32px;border:1px solid var(--border2);border-radius:8px;transition:border-color .2s,background .2s;backdrop-filter:blur(6px);}
+.btn-ghost:hover{border-color:var(--blue2);background:rgba(91,139,255,0.08);}
+.btn-ghost::after{content:'→';color:var(--blue2);}
+/* Scroll indicator */
+.scroll-ind{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 1s ease 2.4s forwards;}
+.scroll-wheel{width:22px;height:36px;border:1.5px solid var(--border2);border-radius:11px;display:flex;justify-content:center;padding-top:6px;}
+.scroll-wheel::after{content:'';width:4px;height:8px;background:var(--blue2);border-radius:2px;animation:scrollDot 2s ease infinite;}
+@keyframes scrollDot{0%{transform:translateY(0);opacity:1;}80%{transform:translateY(10px);opacity:0;}100%{transform:translateY(0);opacity:0;}}
+.scroll-lbl{font-family:var(--mono);font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted2);}
+/* Hero stats bottom bar */
+.hero-stats{position:absolute;bottom:0;left:0;right:0;z-index:2;display:flex;border-top:1px solid var(--border);background:rgba(7,8,13,0.6);backdrop-filter:blur(10px);}
+.hstat{flex:1;padding:22px 28px;border-right:1px solid var(--border);opacity:0;animation:fadeUp 0.6s ease forwards;}
+.hstat:nth-child(1){animation-delay:2s;}
+.hstat:nth-child(2){animation-delay:2.1s;}
+.hstat:nth-child(3){animation-delay:2.2s;}
+.hstat:nth-child(4){animation-delay:2.3s;}
+.hstat:last-child{border-right:none;}
+.hstat-num{font-family:var(--serif);font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--blue2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.hstat-lbl{font-family:var(--mono);font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);margin-top:4px;}
 
-  .nav-logo { font-size: 1.6rem; font-weight: 900; background: linear-gradient(135deg, var(--purple-light), var(--pink-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; white-space: nowrap; }
-  .nav-links { display: flex; align-items: center; gap: 0.15rem; list-style: none; flex: 1; flex-wrap: wrap; }
-  .nav-links a { text-decoration: none; color: var(--text-secondary); font-size: 0.875rem; font-weight: 500; padding: 0.4rem 0.75rem; border-radius: 6px; transition: all 0.2s; }
-  .nav-links a:hover { color: var(--text-primary); background: var(--bg-elevated); }
-  .nav-cta { background: linear-gradient(135deg, var(--purple), var(--pink)) !important; color: #fff !important; padding: 0.5rem 1.25rem !important; border-radius: 8px !important; font-weight: 600 !important; white-space: nowrap; }
+/* MARQUEE */
+.marquee-wrap{background:var(--panel);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 0;overflow:hidden;}
+.marquee-track{display:flex;white-space:nowrap;animation:marq 28s linear infinite;}
+.marquee-track span{font-family:var(--mono);font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);padding:0 32px;}
+.marquee-track .dot{color:var(--blue2);padding:0;font-size:0.5rem;}
+@keyframes marq{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
-  /* ─── UTILITIES ─── */
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+/* SECTION COMMONS */
+.sec-label{font-family:var(--mono);font-size:0.66rem;letter-spacing:3px;text-transform:uppercase;color:var(--blue2);margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+.sec-label::before{content:'';width:28px;height:1px;background:linear-gradient(90deg,var(--blue),var(--violet));}
+.sec-title{font-family:var(--serif);font-size:clamp(2.2rem,4.5vw,3.6rem);font-weight:800;letter-spacing:-1.5px;line-height:1.05;color:var(--white);}
+.sec-title span{background:linear-gradient(135deg,var(--blue2),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 
-  .section-label { display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; padding: 0.35rem 1rem; border-radius: 100px; margin-bottom: 1rem; border: 1px solid; }
-  .label-purple { background: rgba(139,92,246,0.12); color: var(--purple-light); border-color: rgba(139,92,246,0.3); }
-  .label-pink   { background: rgba(236,72,153,0.12); color: var(--pink-light);   border-color: rgba(236,72,153,0.3); }
-  .label-teal   { background: rgba(20,184,166,0.12); color: var(--teal-light);   border-color: rgba(20,184,166,0.3); }
-  .label-orange { background: rgba(249,115,22,0.12); color: var(--orange-light); border-color: rgba(249,115,22,0.3); }
+/* ====== ABOUT / INTRO ====== */
+#about{position:relative;overflow:hidden;}
+.about-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1920&q=85');background-size:cover;background-position:center;opacity:0.12;}
+.about-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;min-height:600px;}
+.about-left{padding:100px 5% 100px 5%;display:flex;flex-direction:column;justify-content:center;background:var(--bg2);}
+.about-right{position:relative;overflow:hidden;}
+.about-right-img{width:100%;height:100%;object-fit:cover;background-image:url('https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=900&q=85');background-size:cover;background-position:center;min-height:500px;}
+.about-right-overlay{position:absolute;inset:0;background:linear-gradient(to right,var(--bg2) 0%,transparent 30%);}
+.about-left p{color:var(--muted);line-height:1.85;margin:24px 0 40px;font-size:0.95rem;font-weight:300;}
+.about-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:40px;}
+.chip{font-family:var(--mono);font-size:0.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:7px 16px;border:1px solid var(--border2);color:var(--muted);border-radius:4px;transition:all .2s;}
+.chip:hover{border-color:var(--blue2);color:var(--blue2);}
 
-  .section-header { text-align: center; margin-bottom: 3.5rem; }
-  .section-header h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: var(--text-primary); margin-bottom: 0.75rem; }
-  .section-header p  { font-size: 1.05rem; color: var(--text-secondary); max-width: 560px; margin: 0 auto; }
+/* ====== SERVICES REBUILD ====== */
+#services{padding:120px 5%;background:var(--bg);}
+.svc-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid var(--border);}
+.svc-header-right{max-width:340px;color:var(--muted);font-size:0.9rem;line-height:1.75;font-weight:300;}
+.svc-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:0;}
+.svc-tab{font-family:var(--mono);font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;padding:14px 28px;color:var(--muted2);cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;position:relative;bottom:-1px;transition:all .25s;}
+.svc-tab:hover{color:var(--white);}
+.svc-tab.active{color:var(--white);border-bottom-color:var(--blue2);}
+.svc-panel{display:none;}
+.svc-panel.active{display:block;}
+.pillar-intro{display:flex;justify-content:space-between;align-items:flex-start;padding:44px 0 32px;gap:40px;}
+.pillar-intro-text h3{font-family:var(--serif);font-size:1.6rem;font-weight:800;letter-spacing:-0.5px;margin-bottom:10px;}
+.pillar-intro-text p{color:var(--muted);font-size:0.88rem;line-height:1.75;font-weight:300;max-width:480px;}
+.pillar-stats{display:flex;gap:40px;flex-shrink:0;}
+.pillar-stat-num{font-family:var(--serif);font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--blue2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.pillar-stat-lbl{font-family:var(--mono);font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);margin-top:4px;}
+.svc-rows{display:flex;flex-direction:column;}
+.svc-row{display:grid;grid-template-columns:68px 1fr 1.2fr;align-items:center;gap:28px;padding:26px 20px;border-top:1px solid var(--border);cursor:default;transition:all .3s;border-radius:0;}
+.svc-row:last-child{border-bottom:1px solid var(--border);}
+.svc-row:hover{background:rgba(91,139,255,0.05);border-radius:10px;border-color:transparent;padding-left:28px;}
+.svc-row.featured{background:rgba(91,139,255,0.07);border:1px solid rgba(91,139,255,0.18);border-radius:10px;padding:26px 24px;margin:4px 0;}
+.svc-row-ico{width:54px;height:54px;border-radius:50%;border:1px solid rgba(139,92,246,0.25);background:rgba(139,92,246,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s;}
+.svc-row:hover .svc-row-ico{border-color:rgba(91,139,255,0.5);background:rgba(91,139,255,0.12);box-shadow:0 0 20px rgba(91,139,255,0.2);}
+.svc-row-ico svg{width:22px;height:22px;stroke:var(--blue2);fill:none;stroke-width:1.5;}
+.svc-row-name{font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--white);transition:color .3s;letter-spacing:-0.2px;}
+.svc-row:hover .svc-row-name{color:var(--blue2);}
+.svc-row-desc{color:var(--muted);font-size:0.86rem;line-height:1.7;font-weight:300;}
 
-  .btn-primary {
-    background: linear-gradient(135deg, var(--purple), var(--pink));
-    color: #fff; font-weight: 700; font-size: 1rem; padding: 0.875rem 2rem;
-    border-radius: 10px; text-decoration: none; border: none; cursor: pointer;
-    display: inline-block; position: relative;
-    transition: transform 0.2s, opacity 0.2s;
-  }
-  .btn-primary::before { content:''; position:absolute; inset:-3px; border-radius:13px; background:linear-gradient(135deg,var(--purple),var(--pink)); opacity:0; z-index:-1; filter:blur(10px); transition:opacity 0.3s; }
-  .btn-primary:hover { transform: translateY(-2px); }
-  .btn-primary:hover::before { opacity: 0.7; }
+/* ====== AI SECTION with BG IMAGE ====== */
+#ai{position:relative;overflow:hidden;}
+.ai-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=85');background-size:cover;background-position:center;opacity:0.08;}
+.ai-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;min-height:680px;align-items:stretch;}
+.ai-left-panel{padding:100px 60px 100px 5%;display:flex;flex-direction:column;justify-content:center;background:rgba(7,8,13,0.7);backdrop-filter:blur(2px);}
+.ai-right-panel{padding:100px 5% 100px 60px;display:flex;flex-direction:column;justify-content:center;background:rgba(12,14,24,0.8);border-left:1px solid var(--border);}
+.ai-left-panel p{color:var(--muted);line-height:1.85;margin:24px 0 44px;font-size:0.93rem;font-weight:300;}
+.ai-feats{display:flex;flex-direction:column;}
+.ai-feat{display:flex;gap:20px;padding:22px 0;border-bottom:1px solid var(--border);cursor:default;transition:padding-left .3s;}
+.ai-feat:hover{padding-left:10px;}
+.ai-feat-ico{width:40px;height:40px;border:1px solid var(--border2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;background:rgba(59,111,245,0.06);transition:all .3s;}
+.ai-feat:hover .ai-feat-ico{border-color:rgba(91,139,255,0.4);background:rgba(59,111,245,0.12);}
+.ai-feat-ttl{font-weight:600;font-size:0.9rem;margin-bottom:4px;font-family:var(--serif);}
+.ai-feat-dsc{color:var(--muted);font-size:0.82rem;line-height:1.6;font-weight:300;}
+.ai-card{border:1px solid var(--border);border-radius:12px;padding:40px;background:rgba(17,20,32,0.8);backdrop-filter:blur(10px);margin-bottom:20px;}
+.ai-card-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--blue2);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.ai-card-label::before{content:'';width:16px;height:1px;background:var(--blue2);}
+.ai-card-title{font-family:var(--serif);font-size:1.5rem;font-weight:800;letter-spacing:-0.5px;margin-bottom:22px;line-height:1.2;}
+.ai-list{list-style:none;display:flex;flex-direction:column;gap:13px;}
+.ai-list li{font-size:0.85rem;color:var(--muted);display:flex;align-items:flex-start;gap:14px;line-height:1.55;font-weight:300;}
+.ai-list li::before{content:'';width:5px;height:5px;border:1px solid var(--blue2);border-radius:50%;flex-shrink:0;margin-top:7px;}
+.ai-badge-wrap{display:flex;gap:12px;flex-wrap:wrap;}
+.ai-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:1px solid rgba(91,139,255,0.3);border-radius:6px;font-family:var(--mono);font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--blue2);background:rgba(59,111,245,0.06);}
+.ai-badge-dot{width:5px;height:5px;background:var(--cyan);border-radius:50%;animation:blink 1.5s infinite;}
 
-  .btn-outline { background:transparent; color:var(--text-primary); font-weight:600; font-size:1rem; padding:0.875rem 2rem; border-radius:10px; text-decoration:none; border:1px solid var(--border-bright); cursor:pointer; transition:all 0.2s; display:inline-block; }
-  .btn-outline:hover { background:var(--bg-elevated); border-color:rgba(255,255,255,0.25); transform:translateY(-2px); }
+/* ====== WORK / PORTFOLIO ====== */
+#work{padding:120px 5%;background:var(--bg2);}
+.work-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px;padding-bottom:40px;border-bottom:1px solid var(--border);}
+.work-header-r{max-width:320px;color:var(--muted);font-size:0.9rem;line-height:1.75;font-weight:300;}
+.work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.work-card{position:relative;overflow:hidden;border-radius:12px;border:1px solid var(--border);transition:border-color .4s,transform .4s,box-shadow .4s;}
+.work-card:hover{border-color:rgba(91,139,255,0.4);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(59,111,245,0.12);}
+.work-canvas-wrap{width:100%;aspect-ratio:4/3;position:relative;overflow:hidden;}
+.work-canvas-wrap canvas{width:100%;height:100%;display:block;}
+.work-card-body{position:absolute;bottom:0;left:0;right:0;padding:28px 24px 24px;background:linear-gradient(to top,rgba(7,8,13,0.97) 0%,rgba(7,8,13,0.7) 55%,transparent 100%);z-index:2;}
+.work-cat{font-family:var(--mono);font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;}
+.work-title{font-family:var(--serif);font-size:1.05rem;font-weight:700;letter-spacing:-0.2px;line-height:1.2;}
+.work-arrow{position:absolute;top:18px;right:18px;width:36px;height:36px;border:1px solid rgba(91,139,255,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:0.85rem;opacity:0;transform:translate(6px,-6px);transition:opacity .3s,transform .3s;background:rgba(7,8,13,0.7);backdrop-filter:blur(4px);z-index:2;}
+.work-card:hover .work-arrow{opacity:1;transform:translate(0,0);}
+/* Scan line shimmer on hover */
+.work-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,rgba(91,139,255,0.04) 50%,transparent 100%);background-size:100% 4px;opacity:0;transition:opacity .4s;z-index:1;pointer-events:none;}
+.work-card:hover::after{opacity:1;animation:scanlines 3s linear infinite;}
+@keyframes scanlines{from{background-position:0 0;}to{background-position:0 100px;}}
 
-  /* ─── HERO — full bleed image ─── */
-  #hero {
-    position: relative;
-    height: 100vh;
-    min-height: 700px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    overflow: hidden;
-    padding-top: var(--nav-h);
-  }
+/* ====== VIDEO SHOWCASE ====== */
+#video-showcase{position:relative;overflow:hidden;padding:120px 5%;background:var(--bg);}
+.vs-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1536240478700-b869ad10a2eb?w=1920&q=80');background-size:cover;background-position:center;opacity:0.06;}
+.vs-inner{position:relative;z-index:1;max-width:1100px;margin:0 auto;}
+.vs-header{text-align:center;margin-bottom:56px;}
+.vs-header .sec-label{justify-content:center;}
+.vs-sub{color:var(--muted);font-size:0.98rem;line-height:1.8;max-width:600px;margin:20px auto 0;font-weight:300;}
 
-  .hero-img {
-    position: absolute;
-    inset: 0;
-    background: url('https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1800&q=80') center center / cover no-repeat;
-    transform: scale(1.05);
-    animation: heroZoom 12s ease-out forwards;
-  }
+/* Player */
+.vs-player-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;border:1px solid var(--border2);box-shadow:0 0 80px rgba(59,111,245,0.2),0 40px 100px rgba(0,0,0,0.6);}
+.vs-overlay{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity .5s;}
+.vs-overlay.hidden{opacity:0;pointer-events:none;}
+.vs-overlay-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=1400&q=85');background-size:cover;background-position:center;}
+.vs-overlay-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(7,8,13,0.82) 0%,rgba(12,10,28,0.75) 50%,rgba(7,8,13,0.82) 100%);}
 
-  @keyframes heroZoom { from { transform: scale(1.08); } to { transform: scale(1); } }
+/* Pulsing rings */
+.vs-rings{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.vs-ring{position:absolute;border-radius:50%;border:1px solid rgba(91,139,255,0.3);transform:translate(-50%,-50%);animation:vsRing 3s ease-out infinite;}
+.vs-ring-1{width:120px;height:120px;animation-delay:0s;}
+.vs-ring-2{width:180px;height:180px;animation-delay:.8s;border-color:rgba(139,92,246,0.2);}
+.vs-ring-3{width:250px;height:250px;animation-delay:1.6s;border-color:rgba(34,211,238,0.12);}
+@keyframes vsRing{0%{transform:translate(-50%,-50%) scale(0.6);opacity:0.8;}100%{transform:translate(-50%,-50%) scale(1.2);opacity:0;}}
 
-  .hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(8,11,20,0.75) 0%, rgba(76,29,149,0.45) 50%, rgba(8,11,20,0.8) 100%);
-  }
+/* Play button */
+.vs-play-btn{position:relative;z-index:3;width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--violet));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 0 rgba(59,111,245,0.5);animation:playPulse 2s ease infinite;transition:transform .25s,box-shadow .25s;}
+.vs-play-btn:hover{transform:scale(1.1);box-shadow:0 0 40px rgba(59,111,245,0.7);}
+.vs-play-btn svg{width:32px;height:32px;color:#fff;margin-left:4px;}
+@keyframes playPulse{0%,100%{box-shadow:0 0 0 0 rgba(59,111,245,0.5);}50%{box-shadow:0 0 0 20px rgba(59,111,245,0);}}
 
-  .hero-content { position: relative; z-index: 2; max-width: 860px; padding: 0 2rem; }
+/* Overlay label */
+.vs-overlay-label{position:absolute;bottom:36px;left:0;right:0;text-align:center;z-index:3;}
+.vs-overlay-tag{font-family:var(--mono);font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:8px;}
+.vs-overlay-title{font-family:var(--serif);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:800;letter-spacing:-0.5px;color:var(--white);}
 
-  .hero-badge { display:inline-flex; align-items:center; gap:0.5rem; background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.4); color:var(--purple-light); font-size:0.8rem; font-weight:600; padding:0.4rem 1rem; border-radius:100px; margin-bottom:2rem; letter-spacing:0.04em; animation: fadeSlideUp 0.8s 0.3s cubic-bezier(.22,1,.36,1) both; }
+/* iframe */
+.vs-iframe-wrap{position:absolute;inset:0;z-index:1;}
+.vs-iframe-wrap iframe{width:100%;height:100%;border:none;}
 
-  #hero h1 { font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 900; margin-bottom: 1.5rem; line-height: 1.1; animation: fadeSlideUp 0.8s 0.5s cubic-bezier(.22,1,.36,1) both; }
-  .hero-line-static { display: block; color: var(--text-primary); }
-  .hero-line-type { display: block; background: linear-gradient(90deg, var(--purple-light), var(--pink-light), #FCD34D); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; white-space:nowrap; overflow:hidden; border-right:3px solid var(--purple-light); width:0; }
-  @keyframes blink { 0%,100%{border-color:var(--purple-light);} 50%{border-color:transparent;} }
-  .cursor-blink { animation: blink 0.75s step-end infinite; }
+/* Stats row */
+.vs-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-top:2px;border-radius:0 0 16px 16px;overflow:hidden;}
+.vs-stat{background:var(--panel);padding:28px 24px;text-align:center;transition:background .3s;}
+.vs-stat:hover{background:rgba(17,20,32,0.9);}
+.vs-stat-num{font-family:var(--serif);font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--blue2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.vs-stat-lbl{font-family:var(--mono);font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);margin-top:6px;}
 
-  #hero p { font-size:1.2rem; color:rgba(255,255,255,0.8); max-width:600px; margin:0 auto 2.5rem; animation: fadeSlideUp 0.8s 0.7s cubic-bezier(.22,1,.36,1) both; }
-  .hero-buttons { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-bottom:0; animation: fadeSlideUp 0.8s 0.9s cubic-bezier(.22,1,.36,1) both; }
+/* ====== PROCESS ====== */
+#process{position:relative;overflow:hidden;padding:120px 5%;}
+.proc-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=80');background-size:cover;background-position:center;opacity:0.05;}
+.proc-inner{position:relative;z-index:1;}
+.proc-header{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:flex-end;margin-bottom:80px;padding-bottom:40px;border-bottom:1px solid var(--border);}
+.proc-header-r{color:var(--muted);font-size:0.92rem;line-height:1.8;font-weight:300;}
+.proc-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+.proc-step{background:var(--bg);padding:48px 36px;position:relative;overflow:hidden;transition:background .3s;}
+.proc-step:hover{background:var(--panel);}
+.proc-num{font-family:var(--serif);font-size:4rem;font-weight:800;background:linear-gradient(135deg,rgba(91,139,255,0.25),rgba(139,92,246,0.1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:24px;display:block;transition:all .3s;}
+.proc-step:hover .proc-num{background:linear-gradient(135deg,var(--blue2),var(--violet));-webkit-background-clip:text;background-clip:text;}
+.proc-title{font-family:var(--serif);font-size:1.15rem;font-weight:700;margin-bottom:14px;}
+.proc-desc{color:var(--muted);font-size:0.84rem;line-height:1.75;font-weight:300;}
+.proc-line{position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--violet));transform:scaleX(0);transform-origin:left;transition:transform .5s;}
+.proc-step:hover .proc-line{transform:scaleX(1);}
 
-  @keyframes fadeSlideUp { from{opacity:0;transform:translateY(28px);} to{opacity:1;transform:translateY(0);} }
+/* ====== TESTIMONIALS ====== */
+#testimonials{position:relative;overflow:hidden;padding:120px 5%;}
+.test-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1920&q=80');background-size:cover;background-position:center;opacity:0.06;}
+.test-inner{position:relative;z-index:1;}
+.test-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px;padding-bottom:40px;border-bottom:1px solid var(--border);}
+.test-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);}
+.test-card{background:var(--bg2);padding:52px 48px;transition:background .3s;}
+.test-card:hover{background:var(--panel);}
+.test-stars{display:flex;gap:4px;margin-bottom:20px;}
+.star{color:var(--blue2);font-size:0.75rem;}
+.test-qmark{font-family:var(--serif);font-size:2.8rem;line-height:1;margin-bottom:18px;background:linear-gradient(135deg,var(--blue2),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.test-text{font-size:0.95rem;line-height:1.82;color:rgba(240,242,255,0.75);margin-bottom:32px;font-style:italic;font-family:var(--serif);font-weight:400;}
+.test-author{display:flex;align-items:center;gap:16px;padding-top:28px;border-top:1px solid var(--border);}
+.test-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--violet));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:0.72rem;font-weight:500;color:#fff;flex-shrink:0;}
+.test-name{font-weight:600;font-size:0.9rem;font-family:var(--serif);}
+.test-role{font-size:0.73rem;color:var(--muted2);font-family:var(--mono);margin-top:2px;}
 
-  /* scroll indicator */
-  .scroll-hint { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); z-index:2; display:flex; flex-direction:column; align-items:center; gap:0.5rem; animation: fadeSlideUp 1s 1.3s cubic-bezier(.22,1,.36,1) both; }
-  .scroll-hint span { font-size:0.72rem; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.12em; }
-  .scroll-line { width:1px; height:50px; background:linear-gradient(to bottom, rgba(255,255,255,0.4), transparent); animation: scrollDrop 1.5s ease-in-out infinite; }
-  @keyframes scrollDrop { 0%{transform:scaleY(0);transform-origin:top;opacity:0;} 50%{transform:scaleY(1);transform-origin:top;opacity:1;} 100%{transform:scaleY(0);transform-origin:bottom;opacity:0;} }
+/* ====== CTA SECTION with BG ====== */
+#cta{position:relative;overflow:hidden;padding:140px 5%;text-align:center;}
+.cta-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=1920&q=85');background-size:cover;background-position:center;}
+.cta-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(7,8,13,0.9),rgba(12,14,24,0.85));}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(59,111,245,0.2),transparent 70%);pointer-events:none;}
+.cta-content{position:relative;z-index:1;}
+.cta-content .sec-label{justify-content:center;}
+.cta-h2{font-family:var(--serif);font-size:clamp(2.5rem,6vw,5rem);font-weight:800;letter-spacing:-2px;line-height:1.02;margin:20px 0 28px;}
+.cta-h2 span{background:linear-gradient(135deg,var(--blue2),var(--violet),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.cta-sub{color:var(--muted);font-size:1rem;line-height:1.75;max-width:520px;margin:0 auto 48px;font-weight:300;}
+.cta-btns{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
 
-  /* ─── STATS BAR ─── */
-  .stats-bar { display:flex; justify-content:center; gap:0; flex-wrap:wrap; background:var(--bg-card); border-top:1px solid var(--border); border-bottom:1px solid var(--border); overflow:hidden; }
-  .stat { text-align:center; padding:2rem 3rem; flex:1; min-width:150px; border-right:1px solid var(--border); }
-  .stat:last-child { border-right:none; }
-  .stat-num { font-size:2.2rem; font-weight:900; background:linear-gradient(90deg,var(--purple-light),var(--pink-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; display:block; margin-bottom:0.25rem; }
-  .stat-label { font-size:0.75rem; color:var(--text-muted); font-weight:500; text-transform:uppercase; letter-spacing:0.08em; }
+/* ====== CONTACT ====== */
+#contact{padding:120px 5%;background:var(--bg2);display:grid;grid-template-columns:1fr 1.3fr;gap:80px;}
+.contact-left p{color:var(--muted);line-height:1.85;margin:24px 0 52px;font-size:0.93rem;font-weight:300;}
+.c-info{display:flex;flex-direction:column;gap:24px;}
+.c-item{display:flex;gap:18px;align-items:flex-start;}
+.c-ico{width:44px;height:44px;border:1px solid var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;background:rgba(59,111,245,0.06);}
+.c-lbl{font-family:var(--mono);font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);margin-bottom:4px;}
+.c-val{color:var(--white);font-size:0.88rem;font-weight:500;}
+.c-form{display:flex;flex-direction:column;gap:16px;}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.f-group{display:flex;flex-direction:column;gap:8px;}
+.f-label{font-family:var(--mono);font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);}
+.f-input,.f-select,.f-textarea{background:var(--panel);border:1px solid var(--border);color:var(--white);padding:14px 18px;font-family:var(--sans);font-size:0.88rem;border-radius:6px;outline:none;transition:border-color .2s,box-shadow .2s;appearance:none;width:100%;font-weight:300;}
+.f-input::placeholder,.f-textarea::placeholder{color:var(--muted2);}
+.f-input:focus,.f-select:focus,.f-textarea:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(91,139,255,0.12);}
+.f-textarea{min-height:130px;resize:vertical;}
+.f-select option{background:var(--panel);}
+.f-submit{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;padding:15px 36px;font-family:var(--mono);font-size:0.78rem;font-weight:600;letter-spacing:0.5px;border:none;border-radius:6px;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 0 24px var(--glow);}
+.f-submit:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(59,111,245,0.5);}
 
-  /* ─── MARQUEE ─── */
-  .marquee-wrap { background:var(--bg-base); border-bottom:1px solid var(--border); padding:1rem 0; overflow:hidden; white-space:nowrap; }
-  .marquee-track { display:inline-flex; animation:marquee 30s linear infinite; }
-  .marquee-item { color:var(--text-secondary); font-size:0.8rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; padding:0 2rem; }
-  .marquee-dot { color:var(--purple); }
-  @keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+/* ====== FOOTER ====== */
+footer{background:var(--bg);border-top:1px solid var(--border);padding:72px 5% 32px;}
+.footer-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:60px;margin-bottom:60px;}
+.f-brand-name{font-family:var(--serif);font-size:1.6rem;font-weight:800;color:var(--white);margin-bottom:16px;letter-spacing:-0.5px;}
+.f-brand-name span{background:linear-gradient(135deg,var(--blue2),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.f-brand-desc{color:var(--muted2);font-size:0.85rem;line-height:1.75;font-weight:300;}
+.f-socials{display:flex;gap:10px;margin-top:28px;}
+.f-soc{width:38px;height:38px;border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted2);text-decoration:none;font-family:var(--mono);font-size:0.7rem;transition:all .2s;}
+.f-soc:hover{border-color:var(--blue2);color:var(--blue2);}
+.f-col-ttl{font-family:var(--mono);font-size:0.6rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(240,242,255,0.35);margin-bottom:24px;}
+.f-links{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.f-links a{color:var(--muted2);text-decoration:none;font-size:0.85rem;transition:color .2s;font-weight:300;}
+.f-links a:hover{color:var(--white);}
+.footer-bottom{border-top:1px solid var(--border);padding-top:28px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+.f-copy{font-family:var(--mono);font-size:0.7rem;color:var(--muted2);}
+.f-legal{display:flex;gap:24px;}
+.f-legal a{font-family:var(--mono);font-size:0.7rem;color:var(--muted2);text-decoration:none;transition:color .2s;}
+.f-legal a:hover{color:var(--white);}
 
-  /* ─── CINEMATIC ABOUT ─── */
-  #about { position:relative; min-height:600px; display:flex; align-items:center; overflow:hidden; }
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .75s ease,transform .75s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:.12s;}.rd2{transition-delay:.22s;}.rd3{transition-delay:.32s;}.rd4{transition-delay:.42s;}
 
-  .about-img {
-    position:absolute; inset:0;
-    background: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1800&q=80') center center / cover no-repeat;
-  }
-  .about-overlay { position:absolute; inset:0; background:linear-gradient(to right, rgba(8,11,20,0.97) 40%, rgba(8,11,20,0.5) 100%); }
-
-  .about-content { position:relative; z-index:2; max-width:1200px; margin:0 auto; padding:6rem 2rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; width:100%; }
-
-  .about-text h2 { font-size:clamp(2rem,4vw,3rem); font-weight:900; color:var(--text-primary); margin-bottom:1rem; line-height:1.2; }
-  .about-text p  { font-size:1rem; color:rgba(255,255,255,0.7); margin-bottom:1.25rem; line-height:1.7; }
-
-  .about-pillars { display:flex; flex-direction:column; gap:0.75rem; }
-  .pillar { display:flex; align-items:center; gap:0.875rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); padding:0.875rem 1rem; border-radius:10px; font-size:0.9rem; font-weight:500; color:var(--text-primary); transition:all 0.25s; cursor:default; }
-  .pillar:hover { border-color:rgba(255,255,255,0.18); transform:translateX(6px); }
-  .pillar-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-  .d-purple { background:var(--purple); box-shadow:0 0 8px var(--purple); }
-  .d-pink   { background:var(--pink);   box-shadow:0 0 8px var(--pink); }
-  .d-teal   { background:var(--teal);   box-shadow:0 0 8px var(--teal); }
-  .d-orange { background:var(--orange); box-shadow:0 0 8px var(--orange); }
-  .d-blue   { background:var(--blue);   box-shadow:0 0 8px var(--blue); }
-
-  /* ─── SERVICES ─── */
-  #services { padding:7rem 2rem; background:var(--bg-card); }
-  .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; max-width:1200px; margin:0 auto; }
-
-  .service-card { background:var(--bg-base); border:1px solid var(--border); border-radius:16px; overflow:hidden; position:relative; transition:transform 0.3s cubic-bezier(.22,1,.36,1), border-color 0.3s, box-shadow 0.3s; }
-  .service-card:hover { transform:translateY(-8px); border-color:var(--border-bright); }
-  .service-card.purple:hover { box-shadow:0 20px 60px rgba(139,92,246,0.18); }
-  .service-card.pink:hover   { box-shadow:0 20px 60px rgba(236,72,153,0.18); }
-  .service-card.teal:hover   { box-shadow:0 20px 60px rgba(20,184,166,0.18); }
-
-  .service-img { height:200px; position:relative; overflow:hidden; }
-  .service-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
-  .service-card:hover .service-img img { transform:scale(1.06); }
-  .service-img-overlay { position:absolute; inset:0; }
-  .service-img-overlay.purple { background:linear-gradient(135deg, rgba(109,40,217,0.6), rgba(139,92,246,0.3)); }
-  .service-img-overlay.pink   { background:linear-gradient(135deg, rgba(157,23,77,0.6),  rgba(236,72,153,0.3)); }
-  .service-img-overlay.teal   { background:linear-gradient(135deg, rgba(15,118,110,0.6), rgba(20,184,166,0.3)); }
-
-  .service-top-bar { position:absolute; top:0; left:0; right:0; height:3px; }
-  .service-top-bar.purple { background:linear-gradient(90deg,var(--purple),var(--purple-light)); }
-  .service-top-bar.pink   { background:linear-gradient(90deg,var(--pink),var(--pink-light)); }
-  .service-top-bar.teal   { background:linear-gradient(90deg,var(--teal),var(--teal-light)); }
-
-  .service-num-overlay { position:absolute; bottom:1rem; right:1.25rem; font-size:3rem; font-weight:900; color:rgba(255,255,255,0.15); line-height:1; }
-
-  .service-body { padding:1.75rem; }
-  .service-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; margin-bottom:1rem; transition:transform 0.3s; }
-  .service-card:hover .service-icon { transform:scale(1.15) rotate(-5deg); }
-  .service-icon.purple { background:rgba(139,92,246,0.15); }
-  .service-icon.pink   { background:rgba(236,72,153,0.15); }
-  .service-icon.teal   { background:rgba(20,184,166,0.15); }
-  .service-card h3 { font-size:1.15rem; font-weight:800; margin-bottom:0.65rem; color:var(--text-primary); }
-  .service-card p  { font-size:0.875rem; color:var(--text-secondary); margin-bottom:1.25rem; line-height:1.65; }
-  .tags { display:flex; flex-wrap:wrap; gap:0.4rem; }
-  .tag { font-size:0.72rem; font-weight:600; padding:0.25rem 0.6rem; border-radius:100px; border:1px solid; }
-  .tag.purple { background:rgba(139,92,246,0.1); color:var(--purple-light); border-color:rgba(139,92,246,0.25); }
-  .tag.pink   { background:rgba(236,72,153,0.1); color:var(--pink-light);   border-color:rgba(236,72,153,0.25); }
-  .tag.teal   { background:rgba(20,184,166,0.1); color:var(--teal-light);   border-color:rgba(20,184,166,0.25); }
-
-  /* ─── CINEMATIC VIDEO SECTION ─── */
-  #video-showcase { position:relative; min-height:580px; display:flex; align-items:center; overflow:hidden; }
-  .video-bg { position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1684369175809-f9642d59f1f5?w=1800&q=80') center center / cover no-repeat; }
-  .video-bg-overlay { position:absolute; inset:0; background:linear-gradient(to left, rgba(8,11,20,0.97) 40%, rgba(8,11,20,0.55) 100%); }
-
-  .video-content { position:relative; z-index:2; max-width:1200px; margin:0 auto; padding:5rem 2rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; width:100%; }
-
-  .video-right { text-align:left; }
-  .video-right h2 { font-size:clamp(2rem,4vw,2.75rem); font-weight:900; margin-bottom:1rem; line-height:1.2; }
-  .video-right p  { font-size:1rem; color:rgba(255,255,255,0.7); margin-bottom:2rem; }
-
-  .video-stats { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-  .video-stat { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:1.25rem; transition:all 0.25s; }
-  .video-stat:hover { border-color:rgba(249,115,22,0.4); transform:scale(1.04); }
-  .video-stat-num { font-size:1.8rem; font-weight:900; background:linear-gradient(90deg,var(--orange),var(--yellow)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; display:block; margin-bottom:0.2rem; }
-  .video-stat-label { font-size:0.75rem; color:rgba(255,255,255,0.45); font-weight:500; text-transform:uppercase; letter-spacing:0.08em; }
-
-  .play-wrap { display:flex; align-items:center; justify-content:center; }
-  .play-btn { width:100px; height:100px; background:linear-gradient(135deg,var(--purple),var(--pink)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; color:#fff; cursor:pointer; transition:transform 0.2s; animation:play-pulse 2.5s ease-in-out infinite; }
-  .play-btn:hover { transform:scale(1.1); animation-play-state:paused; }
-  @keyframes play-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(139,92,246,0.5);} 50%{box-shadow:0 0 0 24px rgba(139,92,246,0);} }
-
-  /* ─── AI SERVICES ─── */
-  #ai { padding:7rem 2rem; background:var(--bg-card); }
-  .ai-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.25rem; max-width:1200px; margin:0 auto 1.5rem; }
-  .ai-card { background:var(--bg-base); border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:all 0.25s; }
-  .ai-card:hover { border-color:var(--border-bright); transform:translateY(-4px); }
-  .ai-card-img { height:160px; overflow:hidden; position:relative; }
-  .ai-card-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
-  .ai-card:hover .ai-card-img img { transform:scale(1.06); }
-  .ai-card-img-overlay { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(8,11,20,0) 30%, rgba(8,11,20,0.9) 100%); }
-  .ai-card-body { padding:1.5rem; }
-  .ai-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; margin-bottom:0.875rem; transition:transform 0.3s; }
-  .ai-card:hover .ai-icon { transform:scale(1.1) rotate(-4deg); }
-  .ai-icon.purple { background:rgba(139,92,246,0.15); }
-  .ai-icon.pink   { background:rgba(236,72,153,0.15); }
-  .ai-icon.teal   { background:rgba(20,184,166,0.15); }
-  .ai-icon.orange { background:rgba(249,115,22,0.15); }
-  .ai-card h3 { font-size:1.05rem; font-weight:700; margin-bottom:0.4rem; color:var(--text-primary); }
-  .ai-card p  { font-size:0.875rem; color:var(--text-secondary); line-height:1.6; }
-
-  .ai-list-box { background:var(--bg-base); border:1px solid var(--border); border-radius:16px; padding:2.5rem; max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:0.875rem; }
-  .ai-list-item { display:flex; align-items:center; gap:0.75rem; font-size:0.875rem; font-weight:500; color:var(--text-secondary); transition:color 0.2s; }
-  .ai-list-item:hover { color:var(--text-primary); }
-  .check { width:20px; height:20px; background:linear-gradient(135deg,var(--teal),var(--blue)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.6rem; flex-shrink:0; color:#fff; }
-
-  /* ─── CINEMATIC PORTFOLIO ─── */
-  #work { padding:7rem 2rem; background:var(--bg-base); }
-
-  .portfolio-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; max-width:1200px; margin:0 auto; }
-
-  .portfolio-card { border-radius:16px; overflow:hidden; position:relative; cursor:pointer; transition:transform 0.35s cubic-bezier(.22,1,.36,1), box-shadow 0.35s; aspect-ratio:4/3; }
-  .portfolio-card:hover { transform:translateY(-8px); box-shadow:0 32px 80px rgba(0,0,0,0.5); }
-  .portfolio-card img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
-  .portfolio-card:hover img { transform:scale(1.07); }
-  .portfolio-card-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(8,11,20,0.95) 0%, rgba(8,11,20,0.3) 50%, rgba(8,11,20,0.1) 100%); transition:background 0.3s; }
-  .portfolio-card:hover .portfolio-card-overlay { background:linear-gradient(to top, rgba(8,11,20,1) 0%, rgba(8,11,20,0.5) 60%, rgba(8,11,20,0.15) 100%); }
-  .portfolio-card-body { position:absolute; bottom:0; left:0; right:0; padding:1.5rem; }
-  .portfolio-cat { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--purple-light); margin-bottom:0.35rem; }
-  .portfolio-card h3 { font-size:1rem; font-weight:700; color:var(--text-primary); margin-bottom:0.25rem; }
-  .portfolio-card p  { font-size:0.82rem; color:rgba(255,255,255,0.55); }
-
-  /* ─── PROCESS ─── */
-  #process { padding:7rem 2rem; background:var(--bg-card); }
-  .process-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; max-width:1200px; margin:0 auto; }
-  .step { text-align:center; padding:2rem 1.5rem; background:var(--bg-base); border:1px solid var(--border); border-radius:16px; transition:all 0.3s; }
-  .step:hover { border-color:var(--border-bright); transform:translateY(-6px); }
-  .step:hover .step-num { transform:scale(1.1); }
-  .step-num { width:60px; height:60px; border-radius:50%; font-size:1.2rem; font-weight:900; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem; color:#fff; transition:transform 0.3s; }
-  .s1 { background:linear-gradient(135deg,var(--purple-dark),var(--purple)); }
-  .s2 { background:linear-gradient(135deg,#9D174D,var(--pink)); }
-  .s3 { background:linear-gradient(135deg,#C2410C,var(--orange)); }
-  .s4 { background:linear-gradient(135deg,#0F766E,var(--teal)); }
-  .step h3 { font-size:1rem; font-weight:800; color:var(--text-primary); margin-bottom:0.5rem; }
-  .step p   { font-size:0.85rem; color:var(--text-secondary); line-height:1.6; }
-
-  /* ─── CINEMATIC TESTIMONIALS ─── */
-  #testimonials { position:relative; overflow:hidden; padding:7rem 2rem; }
-  .testimonials-bg { position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1675557009875-435d1c016520?w=1800&q=80') center center / cover no-repeat; }
-  .testimonials-overlay { position:absolute; inset:0; background:rgba(8,11,20,0.92); }
-  .testimonials-inner { position:relative; z-index:2; }
-
-  .testimonials-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.25rem; max-width:1200px; margin:0 auto; }
-  .tcard { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:2rem; transition:all 0.3s; backdrop-filter:blur(8px); }
-  .tcard:hover { border-color:rgba(139,92,246,0.3); transform:translateY(-4px); box-shadow:0 16px 48px rgba(139,92,246,0.1); }
-  .stars { color:var(--yellow); font-size:1rem; margin-bottom:1rem; letter-spacing:0.1em; }
-  .tcard blockquote { font-size:0.925rem; color:rgba(255,255,255,0.75); line-height:1.75; margin-bottom:1.5rem; font-style:italic; }
-  .tcard-author { display:flex; align-items:center; gap:0.75rem; }
-  .avatar { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; flex-shrink:0; color:#fff; }
-  .a1{background:linear-gradient(135deg,var(--purple),var(--pink));}
-  .a2{background:linear-gradient(135deg,var(--teal),var(--blue));}
-  .a3{background:linear-gradient(135deg,var(--orange),var(--yellow));}
-  .a4{background:linear-gradient(135deg,var(--pink),var(--orange));}
-  .author-name { font-size:0.875rem; font-weight:700; color:var(--text-primary); }
-  .author-role { font-size:0.78rem; color:var(--text-muted); }
-
-  /* ─── CINEMATIC CTA ─── */
-  #cta { position:relative; overflow:hidden; text-align:center; }
-  .cta-bg { position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1681412327806-b38b95d3b7bd?w=1800&q=80') center center / cover no-repeat; }
-  .cta-overlay { position:absolute; inset:0; background:linear-gradient(135deg, rgba(76,29,149,0.88) 0%, rgba(8,11,20,0.92) 100%); }
-  .cta-content { position:relative; z-index:2; padding:8rem 2rem; }
-  #cta h2 { font-size:clamp(2rem,5vw,3.5rem); font-weight:900; margin-bottom:1rem; }
-  #cta h2 span { background:linear-gradient(90deg,var(--purple-light),var(--pink-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-  #cta p { color:rgba(255,255,255,0.7); font-size:1.1rem; margin-bottom:2.5rem; max-width:480px; margin-left:auto; margin-right:auto; }
-  .cta-buttons { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
-
-  /* ─── CONTACT ─── */
-  #contact { padding:7rem 2rem; background:var(--bg-base); }
-  .contact-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:4rem; max-width:1000px; margin:0 auto; }
-  .contact-info h2 { font-size:1.9rem; font-weight:900; color:var(--text-primary); margin-bottom:0.75rem; }
-  .contact-info p  { font-size:0.95rem; color:var(--text-secondary); margin-bottom:2.5rem; line-height:1.7; }
-  .contact-item { display:flex; align-items:center; gap:1rem; margin-bottom:1.25rem; }
-  .contact-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; border:1px solid var(--border); transition:all 0.25s; }
-  .contact-item:hover .contact-icon { transform:scale(1.1); }
-  .contact-icon.purple { background:rgba(139,92,246,0.12); }
-  .contact-icon.pink   { background:rgba(236,72,153,0.12); }
-  .contact-icon.teal   { background:rgba(20,184,166,0.12); }
-  .contact-detail strong { display:block; font-size:0.85rem; font-weight:700; color:var(--text-primary); margin-bottom:0.1rem; }
-  .contact-detail span   { font-size:0.82rem; color:var(--text-secondary); }
-  .contact-form { background:var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2.5rem; }
-  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-  .form-group { display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1rem; }
-  label { font-size:0.8rem; font-weight:600; color:var(--text-secondary); }
-  input, select, textarea { border:1px solid var(--border-bright); border-radius:10px; padding:0.75rem 1rem; font-size:0.875rem; font-family:'Inter',sans-serif; color:var(--text-primary); background:var(--bg-elevated); transition:border-color 0.2s,box-shadow 0.2s; outline:none; width:100%; }
-  input::placeholder, textarea::placeholder { color:var(--text-muted); }
-  input:focus, select:focus, textarea:focus { border-color:rgba(139,92,246,0.6); box-shadow:0 0 0 3px rgba(139,92,246,0.1); }
-  select option { background:var(--bg-elevated); }
-  textarea { resize:vertical; min-height:110px; }
-  .btn-submit { width:100%; background:linear-gradient(135deg,var(--purple),var(--pink)); color:#fff; border:none; padding:1rem; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; margin-top:0.25rem; position:relative; transition:opacity 0.2s,transform 0.2s; }
-  .btn-submit:hover { opacity:0.88; transform:translateY(-1px); }
-
-  /* ─── FOOTER ─── */
-  footer { background:var(--bg-card); border-top:1px solid var(--border); padding:4rem 2rem 2rem; }
-  .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:3rem; max-width:1200px; margin:0 auto 3rem; }
-  .footer-logo { font-size:1.5rem; font-weight:900; background:linear-gradient(135deg,var(--purple-light),var(--pink-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:0.75rem; display:block; }
-  .footer-brand p { font-size:0.85rem; color:var(--text-muted); line-height:1.7; max-width:280px; }
-  .footer-col h4 { font-size:0.75rem; font-weight:700; color:var(--text-primary); margin-bottom:1.25rem; text-transform:uppercase; letter-spacing:0.1em; }
-  .footer-col ul { list-style:none; }
-  .footer-col li { margin-bottom:0.65rem; }
-  .footer-col a { font-size:0.85rem; color:var(--text-muted); text-decoration:none; transition:color 0.2s; }
-  .footer-col a:hover { color:var(--purple-light); }
-  .footer-bottom { border-top:1px solid var(--border); padding-top:2rem; max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
-  .footer-bottom p { font-size:0.78rem; color:var(--text-muted); }
-  .footer-legal { display:flex; gap:1.5rem; }
-  .footer-legal a { font-size:0.78rem; color:var(--text-muted); text-decoration:none; }
-  .footer-legal a:hover { color:var(--text-secondary); }
-
-  /* ─── RESPONSIVE ─── */
-  @media (max-width: 900px) {
-    .about-content, .video-content, .contact-grid { grid-template-columns:1fr; }
-    .about-overlay, .video-bg-overlay { background:rgba(8,11,20,0.88); }
-    .services-grid, .portfolio-grid { grid-template-columns:repeat(2,1fr); }
-    .process-steps { grid-template-columns:repeat(2,1fr); }
-    .testimonials-grid { grid-template-columns:1fr; }
-    .footer-grid { grid-template-columns:1fr 1fr; }
-    .ai-grid { grid-template-columns:1fr; }
-    .ai-list-box { grid-template-columns:1fr; }
-  }
-  @media (max-width: 600px) {
-    nav { padding:0 1rem; gap:1rem; }
-    .nav-links { display:none; }
-    .services-grid, .portfolio-grid, .process-steps { grid-template-columns:1fr; }
-    .footer-grid { grid-template-columns:1fr; }
-    .form-row { grid-template-columns:1fr; }
-    .stat { padding:1.25rem; min-width:130px; }
-  }
+/* MOBILE */
+@media(max-width:1024px){
+  .about-inner,.ai-inner{grid-template-columns:1fr;}
+  .about-right{display:none;}
+  .ai-right-panel{border-left:none;border-top:1px solid var(--border);}
+  .work-grid{grid-template-columns:repeat(2,1fr);}
+  .proc-steps{grid-template-columns:repeat(2,1fr);}
+  .proc-header{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .nav-links,.nav-cta{display:none;}
+  .hamburger{display:flex;}
+  .hero-stats{display:none;}
+  .svc-grid{grid-template-columns:1fr;}
+  .svc-header,.work-header,.test-header{flex-direction:column;align-items:flex-start;gap:20px;}
+  .work-grid{grid-template-columns:1fr;}
+  .test-grid{grid-template-columns:1fr;}
+  #contact{grid-template-columns:1fr;}
+  .f-row{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr 1fr;}
+  .proc-steps{grid-template-columns:1fr;}
+}
+@media(max-width:480px){.footer-top{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="l-logo">Icole<span>.</span></div>
+  <div class="l-line"></div>
+  <div class="l-pct" id="l-pct">Loading...</div>
+</div>
+
 <!-- NAV -->
-<nav>
-  <a href="#hero" class="nav-logo">Icole.</a>
+<nav id="nav">
+  <a href="#hero" class="nav-logo">Icole<span>.</span></a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
@@ -401,279 +384,444 @@
     <li><a href="#ai">AI</a></li>
     <li><a href="#work">Work</a></li>
     <li><a href="#process">Process</a></li>
-    <li><a href="#testimonials">Reviews</a></li>
-    <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
+  <a href="#contact" class="nav-cta">Get in Touch</a>
+  <div class="hamburger"><span></span><span></span><span></span></div>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-img"></div>
+  <div class="hero-bg"></div>
   <div class="hero-overlay"></div>
+  <div class="hero-overlay2"></div>
+  <div class="hero-particles"></div>
+
   <div class="hero-content">
-    <div class="hero-badge">⚡ Full-Service AI Agency — We Build What's Next</div>
-    <h1>
-      <span class="hero-line-static">Innovate. Transform.</span>
-      <span class="hero-line-type" id="typewriter-line"></span>
+    <div class="hero-tag">
+      <div class="tag-dot"></div>
+      <span class="tag-txt">Full-Service AI Agency</span>
+    </div>
+    <h1 class="hero-h1">
+      Innovate.<br/>
+      <span class="line2">Transform.</span><br/>
+      Achieve.
     </h1>
-    <p>Web design. Marketing campaigns. Intelligent AI systems — agents, custom CRMs, AI-generated video, and beyond.</p>
-    <div class="hero-buttons">
-      <a href="#services" class="btn-primary">Explore Services</a>
-      <a href="#work" class="btn-outline">Our Work</a>
+    <p class="hero-sub">Web design. Marketing campaigns. Intelligent AI systems — agents, custom CRMs, AI-generated video, and beyond. We build what's next for your brand.</p>
+    <div class="hero-actions">
+      <a href="#services" class="btn-glow">Explore Services</a>
+      <a href="#work" class="btn-ghost">Our Work</a>
     </div>
   </div>
-  <div class="scroll-hint">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
+
+  <div class="scroll-ind">
+    <div class="scroll-wheel"></div>
+    <span class="scroll-lbl">Scroll</span>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-num">200+</div><div class="hstat-lbl">Projects Delivered</div></div>
+    <div class="hstat"><div class="hstat-num">98%</div><div class="hstat-lbl">Client Retention</div></div>
+    <div class="hstat"><div class="hstat-num">4×</div><div class="hstat-lbl">Avg. ROAS Achieved</div></div>
+    <div class="hstat"><div class="hstat-num">12+</div><div class="hstat-lbl">Industries Served</div></div>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stat"><span class="stat-num">200+</span><span class="stat-label">Projects Delivered</span></div>
-  <div class="stat"><span class="stat-num">98%</span><span class="stat-label">Client Retention</span></div>
-  <div class="stat"><span class="stat-num">4×</span><span class="stat-label">Avg. ROAS Achieved</span></div>
-  <div class="stat"><span class="stat-num">12+</span><span class="stat-label">Industries Served</span></div>
-</div>
-
 <!-- MARQUEE -->
-<div class="marquee-wrap" aria-hidden="true">
+<div class="marquee-wrap">
   <div class="marquee-track">
-    <span class="marquee-item">Web Design</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">AI Agents</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">Marketing Campaigns</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">Custom CRMs</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">AI Video Production</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">Brand Strategy</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">SEO & Growth</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">Digital Transformation</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">Automation</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">Web Design</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">AI Agents</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">Marketing Campaigns</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">Custom CRMs</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">AI Video Production</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">Brand Strategy</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">SEO & Growth</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">Digital Transformation</span><span class="marquee-dot"> ✦ </span>
-    <span class="marquee-item">Automation</span><span class="marquee-dot"> ✦ </span>
+    <span>Web Design</span><span class="dot">✦</span><span>AI Agents</span><span class="dot">✦</span><span>Marketing Campaigns</span><span class="dot">✦</span><span>Custom CRMs</span><span class="dot">✦</span><span>AI Video Production</span><span class="dot">✦</span><span>Brand Strategy</span><span class="dot">✦</span><span>SEO & Growth</span><span class="dot">✦</span><span>Digital Transformation</span><span class="dot">✦</span><span>Automation</span><span class="dot">✦</span>
+    <span>Web Design</span><span class="dot">✦</span><span>AI Agents</span><span class="dot">✦</span><span>Marketing Campaigns</span><span class="dot">✦</span><span>Custom CRMs</span><span class="dot">✦</span><span>AI Video Production</span><span class="dot">✦</span><span>Brand Strategy</span><span class="dot">✦</span><span>SEO & Growth</span><span class="dot">✦</span><span>Digital Transformation</span><span class="dot">✦</span><span>Automation</span><span class="dot">✦</span>
   </div>
 </div>
 
-<!-- ABOUT — cinematic -->
+<!-- ABOUT -->
 <section id="about">
-  <div class="about-img"></div>
-  <div class="about-overlay"></div>
-  <div class="about-content">
-    <div class="about-text reveal">
-      <span class="section-label label-purple">About Us</span>
-      <h2>We're More Than a Digital Agency</h2>
-      <p>Icole Digital Media is a full-service digital and AI agency built for the modern era. We combine elite web design, data-driven marketing, and cutting-edge AI technology to help businesses dominate their industry.</p>
-      <p>We don't just deliver projects — we deliver transformations.</p>
-      <a href="#contact" class="btn-primary">Work With Us</a>
+  <div class="about-bg"></div>
+  <div class="about-inner">
+    <div class="about-left reveal">
+      <div class="sec-label">About Us</div>
+      <h2 class="sec-title">We're More Than<br/>a <span>Digital Agency</span></h2>
+      <p>Icole Digital Media is a full-service digital and AI agency built for the modern era. We combine elite web design, data-driven marketing, and cutting-edge AI technology to help businesses dominate their industry. We don't just deliver projects — we deliver transformations.</p>
+      <div class="about-chips">
+        <div class="chip">AI-First Approach</div>
+        <div class="chip">Results Driven</div>
+        <div class="chip">White-Glove Service</div>
+        <div class="chip">Scalable Systems</div>
+        <div class="chip">Full-Stack Capability</div>
+      </div>
+      <a href="#contact" class="btn-glow" style="align-self:flex-start;">Work With Us</a>
     </div>
-    <div class="about-pillars reveal reveal-delay-2">
-      <div class="pillar"><div class="pillar-dot d-purple"></div>AI-First Approach</div>
-      <div class="pillar"><div class="pillar-dot d-orange"></div>Results Driven</div>
-      <div class="pillar"><div class="pillar-dot d-teal"></div>White-Glove Service</div>
-      <div class="pillar"><div class="pillar-dot d-pink"></div>Scalable Systems</div>
-      <div class="pillar"><div class="pillar-dot d-blue"></div>Full-Stack Capability</div>
+    <div class="about-right">
+      <div class="about-right-img"></div>
+      <div class="about-right-overlay"></div>
     </div>
   </div>
 </section>
 
 <!-- SERVICES -->
 <section id="services">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-label label-purple">What We Do</span>
-      <h2>Our Core Services</h2>
-      <p>We work with you, not for you — crafting strategies and systems that scale your business.</p>
+  <div class="svc-header reveal">
+    <div>
+      <div class="sec-label">What We Do</div>
+      <h2 class="sec-title">Our Core <span>Services</span></h2>
     </div>
-    <div class="services-grid">
-      <div class="service-card purple reveal reveal-delay-1">
-        <div class="service-img">
-          <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&q=80" alt="Web Design">
-          <div class="service-img-overlay purple"></div>
-          <div class="service-top-bar purple"></div>
-          <div class="service-num-overlay">01</div>
-        </div>
-        <div class="service-body">
-          <div class="service-icon purple">🌐</div>
-          <h3>Web Design & Development</h3>
-          <p>Conversion-focused websites and web apps built with precision — combining stunning visuals with seamless performance.</p>
-          <div class="tags"><span class="tag purple">Landing Pages</span><span class="tag purple">E-Commerce</span><span class="tag purple">Web Apps</span><span class="tag purple">UI/UX</span></div>
-        </div>
+    <p class="svc-header-right">Three focused pillars — AI automation, performance marketing, and e-commerce — each designed to drive measurable growth for your business.</p>
+  </div>
+
+  <!-- SVG gradient for icons -->
+  <svg width="0" height="0" style="position:absolute;">
+    <defs>
+      <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#5b8bff"/>
+        <stop offset="100%" style="stop-color:#8b5cf6"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- TABS -->
+  <div class="svc-tabs">
+    <button class="svc-tab active" onclick="switchTab(0)">AI Automation</button>
+    <button class="svc-tab" onclick="switchTab(1)">Digital Marketing</button>
+    <button class="svc-tab" onclick="switchTab(2)">E-Commerce</button>
+  </div>
+
+  <!-- PANEL 1: AI Automation -->
+  <div class="svc-panel active" id="svc-panel-0">
+    <div class="pillar-intro">
+      <div class="pillar-intro-text">
+        <h3>AI Automation & Outreach</h3>
+        <p>We deploy intelligent systems that work around the clock — calling leads, vetting prospects, following up, and closing gaps in your pipeline so your team can focus on what matters.</p>
       </div>
-      <div class="service-card pink reveal reveal-delay-2">
-        <div class="service-img">
-          <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80" alt="Marketing">
-          <div class="service-img-overlay pink"></div>
-          <div class="service-top-bar pink"></div>
-          <div class="service-num-overlay">02</div>
-        </div>
-        <div class="service-body">
-          <div class="service-icon pink">📣</div>
-          <h3>Marketing Campaigns</h3>
-          <p>Data-driven campaigns that generate real leads, drive revenue, and build brand authority across all channels.</p>
-          <div class="tags"><span class="tag pink">Social Media</span><span class="tag pink">Paid Ads</span><span class="tag pink">Email Flows</span><span class="tag pink">SEO</span></div>
-        </div>
+      <div class="pillar-stats">
+        <div><div class="pillar-stat-num">24/7</div><div class="pillar-stat-lbl">Always On</div></div>
+        <div><div class="pillar-stat-num">10×</div><div class="pillar-stat-lbl">Faster Outreach</div></div>
+        <div><div class="pillar-stat-num">60%</div><div class="pillar-stat-lbl">Less Manual Work</div></div>
       </div>
-      <div class="service-card teal reveal reveal-delay-3">
-        <div class="service-img">
-          <img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80" alt="AI Agency">
-          <div class="service-img-overlay teal"></div>
-          <div class="service-top-bar teal"></div>
-          <div class="service-num-overlay">03</div>
-        </div>
-        <div class="service-body">
-          <div class="service-icon teal">🤖</div>
-          <h3>Full AI Agency</h3>
-          <p>End-to-end AI solutions that automate, personalize, and supercharge every part of your business.</p>
-          <div class="tags"><span class="tag teal">AI Agents</span><span class="tag teal">Custom CRMs</span><span class="tag teal">AI Video</span><span class="tag teal">Automation</span></div>
-        </div>
+    </div>
+    <div class="svc-rows">
+      <div class="svc-row featured">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.07 11.5 19.79 19.79 0 011 2.18 2 2 0 013.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+        <div class="svc-row-name">AI Outbound Calling</div>
+        <div class="svc-row-desc">AI-powered cold calling that sounds human — booking qualified appointments at scale, 24/7, without a sales rep lifting a finger.</div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <div class="svc-row-name">AI Inbound Lead Vetting</div>
+        <div class="svc-row-desc">We answer inbound calls and qualify leads instantly — scoring intent, gathering info, and routing hot leads directly to your calendar.</div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div class="svc-row-name">AI Text & Email</div>
+        <div class="svc-row-desc">Automated, human-like messages that follow up, nurture, and convert leads across every channel — SMS, email, and beyond.</div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 9l3 3 4-4"/></svg></div>
+        <div class="svc-row-name">Workflow Automation</div>
+        <div class="svc-row-desc">Hands-free business operations — from CRM updates to appointment reminders to internal task routing. We build the engine that runs your business.</div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+        <div class="svc-row-name">Custom AI CRM</div>
+        <div class="svc-row-desc">AI-powered CRMs built around your exact sales process — not a one-size-fits-all template. Pipeline visibility, lead scoring, and automation in one system.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: Digital Marketing -->
+  <div class="svc-panel" id="svc-panel-1">
+    <div class="pillar-intro">
+      <div class="pillar-intro-text">
+        <h3>Digital Marketing & Growth</h3>
+        <p>We turn ad spend into revenue and clicks into customers. From paid social to Google PPC to AI-generated video — we build campaigns that perform, not just look good.</p>
+      </div>
+      <div class="pillar-stats">
+        <div><div class="pillar-stat-num">300%</div><div class="pillar-stat-lbl">Avg ROAS</div></div>
+        <div><div class="pillar-stat-num">4×</div><div class="pillar-stat-lbl">Lead Volume</div></div>
+        <div><div class="pillar-stat-num">90d</div><div class="pillar-stat-lbl">To Results</div></div>
+      </div>
+    </div>
+    <div class="svc-rows">
+      <div class="svc-row featured">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></div>
+        <div class="svc-row-name">Facebook & Instagram Ads</div>
+        <div class="svc-row-desc">Scroll-stopping paid social campaigns engineered for conversions — targeting the right audience with the right creative at the right time.</div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div>
+        <div class="svc-row-name">Google PPC</div>
+        <div class="svc-row-desc">We turn Google clicks into real conversations. Strategic keyword targeting, compelling ad copy, and landing pages that convert — all optimized by AI.</div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+        <div class="svc-row-name">AI Video Creation</div>
+        <div class="svc-row-desc">Hyper-personalized video ads at scale — from product demos to brand stories to retargeting creatives, all produced and deployed by AI.</div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="svc-row-name">SEO & Content Marketing</div>
+        <div class="svc-row-desc">Long-term organic growth through strategic content, technical SEO, and authority building — so you rank, get found, and convert 24/7.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: E-Commerce -->
+  <div class="svc-panel" id="svc-panel-2">
+    <div class="pillar-intro">
+      <div class="pillar-intro-text">
+        <h3>E-Commerce Builds & Exits</h3>
+        <p>We don't just build stores — we build profitable businesses. From product research to brand positioning to scaling and selling, we take you through the full e-commerce lifecycle.</p>
+      </div>
+      <div class="pillar-stats">
+        <div><div class="pillar-stat-num">6–12</div><div class="pillar-stat-lbl">Mo. to Profit</div></div>
+        <div><div class="pillar-stat-num">3×</div><div class="pillar-stat-lbl">Exit Multiples</div></div>
+        <div><div class="pillar-stat-num">100%</div><div class="pillar-stat-lbl">Done-For-You</div></div>
+      </div>
+    </div>
+    <div class="svc-rows">
+      <div class="svc-row featured">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+        <div class="svc-row-name">Profitable Store Builds</div>
+        <div class="svc-row-desc">We research winning products, build your Shopify store, set up supplier relationships, and launch with paid traffic — a complete, done-for-you business.</div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <div class="svc-row-name">Product Research & Validation</div>
+        <div class="svc-row-desc">AI-powered market research to find high-margin, low-competition products with proven demand — before you spend a dollar on inventory.</div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+        <div class="svc-row-name">Scale to Profitability</div>
+        <div class="svc-row-desc">Once the store is live, we scale it — optimizing ads, expanding to new channels, improving conversion rates, and maximizing customer lifetime value.</div>
+      </div>
+      <div class="svc-row">
+        <div class="svc-row-ico"><svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg></div>
+        <div class="svc-row-name">Business Brokering & Exits</div>
+        <div class="svc-row-desc">When it's time to sell, we position your store for maximum valuation and connect you with qualified buyers — turning your brand into a profitable exit.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- VIDEO — cinematic -->
+<!-- AI VIDEO SHOWCASE -->
 <section id="video-showcase">
-  <div class="video-bg"></div>
-  <div class="video-bg-overlay"></div>
-  <div class="video-content">
-    <div class="play-wrap reveal">
-      <div class="play-btn">▶</div>
+  <div class="vs-bg"></div>
+  <div class="vs-inner">
+    <div class="vs-header reveal">
+      <div class="sec-label">AI in Action</div>
+      <h2 class="sec-title">See What <span>AI Production</span><br/>Looks Like</h2>
+      <p class="vs-sub">Watch how we leverage cutting-edge artificial intelligence to produce stunning video content, automate creative workflows, and deliver results at a scale never before possible.</p>
     </div>
-    <div class="video-right reveal reveal-delay-2">
-      <span class="section-label label-orange">AI in Action</span>
-      <h2>See What AI Production Looks Like</h2>
-      <p>We leverage cutting-edge AI to produce stunning video content, automate creative workflows, and deliver results at a scale never before possible.</p>
-      <div class="video-stats">
-        <div class="video-stat"><span class="video-stat-num">10×</span><span class="video-stat-label">Faster Production</span></div>
-        <div class="video-stat"><span class="video-stat-num">1,000+</span><span class="video-stat-label">Videos Generated</span></div>
-        <div class="video-stat"><span class="video-stat-num">4×</span><span class="video-stat-label">Higher Engagement</span></div>
-        <div class="video-stat"><span class="video-stat-num">100%</span><span class="video-stat-label">Custom to Brand</span></div>
+    <div class="vs-player-wrap reveal">
+      <div class="vs-overlay" id="vsOverlay">
+        <div class="vs-overlay-bg"></div>
+        <div class="vs-rings">
+          <div class="vs-ring vs-ring-1"></div>
+          <div class="vs-ring vs-ring-2"></div>
+          <div class="vs-ring vs-ring-3"></div>
+        </div>
+        <button class="vs-play-btn" id="vsPlayBtn" aria-label="Play video">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <div class="vs-overlay-label">
+          <span class="vs-overlay-tag">▶ AI Video Production Demo</span>
+          <div class="vs-overlay-title">The Future of Content is Here</div>
+        </div>
+      </div>
+      <div class="vs-iframe-wrap" id="vsIframeWrap" style="display:none;">
+        <iframe id="vsIframe" src="" title="AI Production Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="vs-stats reveal">
+      <div class="vs-stat">
+        <div class="vs-stat-num">10×</div>
+        <div class="vs-stat-lbl">Faster Production</div>
+      </div>
+      <div class="vs-stat">
+        <div class="vs-stat-num">1,000+</div>
+        <div class="vs-stat-lbl">Videos Generated</div>
+      </div>
+      <div class="vs-stat">
+        <div class="vs-stat-num">4×</div>
+        <div class="vs-stat-lbl">Higher Engagement</div>
+      </div>
+      <div class="vs-stat">
+        <div class="vs-stat-num">100%</div>
+        <div class="vs-stat-lbl">Custom to Your Brand</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- AI SERVICES -->
+<!-- AI SECTION -->
 <section id="ai">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-label label-purple">AI Services</span>
-      <h2>The Intelligence Behind Your Growth</h2>
-      <p>We design, build, and deploy intelligent systems that replace manual work and close more deals.</p>
+  <div class="ai-bg"></div>
+  <div class="ai-inner">
+    <div class="ai-left-panel reveal">
+      <div class="sec-label">AI Services</div>
+      <h2 class="sec-title">The Intelligence<br/>Behind Your <span>Growth</span></h2>
+      <p>We're not just an agency that uses AI — we are a full AI agency. We design, build, and deploy intelligent systems that replace manual work, close more deals, and create unforgettable customer experiences around the clock.</p>
+      <div class="ai-feats">
+        <div class="ai-feat">
+          <div class="ai-feat-ico">⚡</div>
+          <div><div class="ai-feat-ttl">AI Agents & Automation</div><div class="ai-feat-dsc">Custom agents handling support, lead qualification, scheduling, and workflows — 24/7.</div></div>
+        </div>
+        <div class="ai-feat">
+          <div class="ai-feat-ico">🧩</div>
+          <div><div class="ai-feat-ttl">Custom CRM Systems</div><div class="ai-feat-dsc">AI-powered CRMs built around your exact process — not a one-size-fits-all template.</div></div>
+        </div>
+        <div class="ai-feat">
+          <div class="ai-feat-ico">🎬</div>
+          <div><div class="ai-feat-ttl">AI Video Production</div><div class="ai-feat-dsc">Hyper-personalized video at scale — ads, onboarding, demos, all AI-generated.</div></div>
+        </div>
+        <div class="ai-feat">
+          <div class="ai-feat-ico">🔮</div>
+          <div><div class="ai-feat-ttl">Predictive Analytics</div><div class="ai-feat-dsc">Turn raw data into foresight with AI dashboards and forecasting built for you.</div></div>
+        </div>
+      </div>
     </div>
-    <div class="ai-grid">
-      <div class="ai-card reveal reveal-delay-1">
-        <div class="ai-card-img"><img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" alt="AI Agents"><div class="ai-card-img-overlay"></div></div>
-        <div class="ai-card-body"><div class="ai-icon purple">⚡</div><h3>AI Agents & Automation</h3><p>Custom agents handling support, lead qualification, scheduling, and workflows — 24/7 without downtime.</p></div>
+    <div class="ai-right-panel reveal rd1">
+      <div class="ai-card">
+        <div class="ai-card-label">AI Stack 2025</div>
+        <div class="ai-card-title">What Our AI<br/>Builds for You</div>
+        <ul class="ai-list">
+          <li>Conversational AI assistants & voice bots</li>
+          <li>Intelligent lead generation pipelines</li>
+          <li>Automated content generation systems</li>
+          <li>AI-powered video personalization at scale</li>
+          <li>Custom knowledge base & RAG systems</li>
+          <li>Multi-agent workflow orchestration</li>
+          <li>Real-time analytics & reporting AI</li>
+          <li>CRM integrations with AI lead scoring</li>
+        </ul>
       </div>
-      <div class="ai-card reveal reveal-delay-2">
-        <div class="ai-card-img"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Custom CRM"><div class="ai-card-img-overlay"></div></div>
-        <div class="ai-card-body"><div class="ai-icon pink">🧩</div><h3>Custom CRM Systems</h3><p>AI-powered CRMs built around your exact process — not a one-size-fits-all template that slows you down.</p></div>
+      <div class="ai-badge-wrap">
+        <div class="ai-badge"><div class="ai-badge-dot"></div>Fully Custom Built</div>
+        <div class="ai-badge"><div class="ai-badge-dot"></div>Scalable Architecture</div>
+        <div class="ai-badge"><div class="ai-badge-dot"></div>Ongoing Support</div>
       </div>
-      <div class="ai-card reveal reveal-delay-3">
-        <div class="ai-card-img"><img src="https://images.unsplash.com/photo-1684369175809-f9642d59f1f5?w=800&q=80" alt="AI Video"><div class="ai-card-img-overlay"></div></div>
-        <div class="ai-card-body"><div class="ai-icon orange">🎬</div><h3>AI Video Production</h3><p>Hyper-personalized video at scale — ads, onboarding, demos, all AI-generated and custom to your brand.</p></div>
-      </div>
-      <div class="ai-card reveal reveal-delay-4">
-        <div class="ai-card-img"><img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" alt="Analytics"><div class="ai-card-img-overlay"></div></div>
-        <div class="ai-card-body"><div class="ai-icon teal">🔮</div><h3>Predictive Analytics</h3><p>Turn raw data into foresight with AI dashboards and forecasting built for your specific business model.</p></div>
-      </div>
-    </div>
-    <div class="ai-list-box reveal">
-      <div class="ai-list-item"><div class="check">✓</div>Conversational AI assistants & voice bots</div>
-      <div class="ai-list-item"><div class="check">✓</div>Intelligent lead generation pipelines</div>
-      <div class="ai-list-item"><div class="check">✓</div>Automated content generation systems</div>
-      <div class="ai-list-item"><div class="check">✓</div>AI-powered video personalization at scale</div>
-      <div class="ai-list-item"><div class="check">✓</div>Custom knowledge base & RAG systems</div>
-      <div class="ai-list-item"><div class="check">✓</div>Multi-agent workflow orchestration</div>
-      <div class="ai-list-item"><div class="check">✓</div>Real-time analytics & reporting AI</div>
-      <div class="ai-list-item"><div class="check">✓</div>CRM integrations with AI lead scoring</div>
     </div>
   </div>
 </section>
 
-<!-- PORTFOLIO -->
+<!-- WORK -->
 <section id="work">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-label label-pink">Portfolio</span>
-      <h2>Things We've Built</h2>
-      <p>Strategy, design, and intelligent technology coming together to deliver extraordinary outcomes.</p>
+  <div class="work-header reveal">
+    <div>
+      <div class="sec-label">Portfolio</div>
+      <h2 class="sec-title">Things We've <span>Built</span></h2>
     </div>
-    <div class="portfolio-grid">
-      <div class="portfolio-card reveal reveal-delay-1">
-        <img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80" alt="NexusCRM">
-        <div class="portfolio-card-overlay"></div>
-        <div class="portfolio-card-body"><div class="portfolio-cat">AI Platform / CRM</div><h3>NexusCRM — AI Sales Platform</h3><p>Full AI-powered CRM for enterprise sales teams.</p></div>
-      </div>
-      <div class="portfolio-card reveal reveal-delay-2">
-        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80" alt="Growth Campaign">
-        <div class="portfolio-card-overlay"></div>
-        <div class="portfolio-card-body"><div class="portfolio-cat">Marketing Campaign</div><h3>Growth Campaign: 300% ROAS</h3><p>Multi-channel campaign driving 300% return on ad spend.</p></div>
-      </div>
-      <div class="portfolio-card reveal reveal-delay-3">
-        <img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" alt="Analytics">
-        <div class="portfolio-card-overlay"></div>
-        <div class="portfolio-card-body"><div class="portfolio-cat">Data & Analytics</div><h3>AI Analytics Dashboard</h3><p>Real-time business intelligence powered by machine learning.</p></div>
-      </div>
-      <div class="portfolio-card reveal reveal-delay-4">
-        <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&q=80" alt="Brand Redesign">
-        <div class="portfolio-card-overlay"></div>
-        <div class="portfolio-card-body"><div class="portfolio-cat">Web Design</div><h3>Luxury Brand Redesign</h3><p>Complete digital transformation for a high-end lifestyle brand.</p></div>
-      </div>
-      <div class="portfolio-card reveal reveal-delay-5">
-        <img src="https://images.unsplash.com/photo-1684369175809-f9642d59f1f5?w=800&q=80" alt="AI Video">
-        <div class="portfolio-card-overlay"></div>
-        <div class="portfolio-card-body"><div class="portfolio-cat">AI Video</div><h3>Personalized Ad Campaign at Scale</h3><p>1,000+ personalized video ads generated and deployed via AI.</p></div>
-      </div>
-      <div class="portfolio-card reveal reveal-delay-6">
-        <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" alt="Support AI">
-        <div class="portfolio-card-overlay"></div>
-        <div class="portfolio-card-body"><div class="portfolio-cat">AI Agent</div><h3>24/7 Customer Support System</h3><p>Fully autonomous support agent handling 60%+ of all tickets.</p></div>
-      </div>
+    <p class="work-header-r">A selection of projects where strategy, design, and intelligent technology came together to deliver extraordinary outcomes.</p>
+  </div>
+  <div class="work-grid">
+    <div class="work-card reveal">
+      <div class="work-canvas-wrap"><canvas id="wc1" data-type="neural"></canvas></div>
+      <div class="work-card-body"><div class="work-cat">AI Platform / CRM</div><div class="work-title">NexusCRM — AI Sales Platform</div></div>
+      <div class="work-arrow">→</div>
+    </div>
+    <div class="work-card reveal rd1">
+      <div class="work-canvas-wrap"><canvas id="wc2" data-type="wave"></canvas></div>
+      <div class="work-card-body"><div class="work-cat">Marketing Campaign</div><div class="work-title">Growth Campaign: 300% ROAS</div></div>
+      <div class="work-arrow">→</div>
+    </div>
+    <div class="work-card reveal rd2">
+      <div class="work-canvas-wrap"><canvas id="wc3" data-type="bars"></canvas></div>
+      <div class="work-card-body"><div class="work-cat">Data & Analytics</div><div class="work-title">AI Analytics Dashboard</div></div>
+      <div class="work-arrow">→</div>
+    </div>
+    <div class="work-card reveal">
+      <div class="work-canvas-wrap"><canvas id="wc4" data-type="particles"></canvas></div>
+      <div class="work-card-body"><div class="work-cat">Web Design</div><div class="work-title">Luxury Brand Redesign</div></div>
+      <div class="work-arrow">→</div>
+    </div>
+    <div class="work-card reveal rd1">
+      <div class="work-canvas-wrap"><canvas id="wc5" data-type="rings"></canvas></div>
+      <div class="work-card-body"><div class="work-cat">AI Video</div><div class="work-title">Personalized Ad Campaign at Scale</div></div>
+      <div class="work-arrow">→</div>
+    </div>
+    <div class="work-card reveal rd2">
+      <div class="work-canvas-wrap"><canvas id="wc6" data-type="grid"></canvas></div>
+      <div class="work-card-body"><div class="work-cat">AI Agent</div><div class="work-title">24/7 Customer Support System</div></div>
+      <div class="work-arrow">→</div>
     </div>
   </div>
 </section>
 
 <!-- PROCESS -->
 <section id="process">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-label label-teal">How We Work</span>
-      <h2>Our Process</h2>
-      <p>Four deliberate phases taking your vision from blank page to live, high-performing product.</p>
+  <div class="proc-bg"></div>
+  <div class="proc-inner">
+    <div class="proc-header reveal">
+      <div>
+        <div class="sec-label">How We Work</div>
+        <h2 class="sec-title">Our <span>Process</span></h2>
+      </div>
+      <p class="proc-header-r">Four deliberate phases that take your vision from a blank page to a live, high-performing product — with zero guesswork and complete transparency at every step.</p>
     </div>
-    <div class="process-steps">
-      <div class="step reveal reveal-delay-1"><div class="step-num s1">01</div><h3>Discover</h3><p>Deep dive into your business, audience, and goals. We define success before writing a single line of code.</p></div>
-      <div class="step reveal reveal-delay-2"><div class="step-num s2">02</div><h3>Strategize</h3><p>Build the roadmap — tech stack, content strategy, campaign architecture. Every decision tied to outcomes.</p></div>
-      <div class="step reveal reveal-delay-3"><div class="step-num s3">03</div><h3>Build</h3><p>Design, develop, and deploy with precision. We move fast without breaking things, iterating at every milestone.</p></div>
-      <div class="step reveal reveal-delay-4"><div class="step-num s4">04</div><h3>Scale</h3><p>Launch is just the beginning. We monitor, optimize, and scale using data, AI, and continuous improvement.</p></div>
+    <div class="proc-steps">
+      <div class="proc-step reveal">
+        <span class="proc-num">01</span>
+        <h3 class="proc-title">Discover</h3>
+        <p class="proc-desc">Deep dive into your business, audience, and goals. We define what success looks like before writing a single line of code or spending a dollar on ads.</p>
+        <div class="proc-line"></div>
+      </div>
+      <div class="proc-step reveal rd1">
+        <span class="proc-num">02</span>
+        <h3 class="proc-title">Strategize</h3>
+        <p class="proc-desc">Build the roadmap — from tech stack selection to content strategy to campaign architecture. Every decision is intentional and tied to measurable outcomes.</p>
+        <div class="proc-line"></div>
+      </div>
+      <div class="proc-step reveal rd2">
+        <span class="proc-num">03</span>
+        <h3 class="proc-title">Build</h3>
+        <p class="proc-desc">Design, develop, and deploy with precision. We move fast without breaking things — iterating with your feedback at every milestone.</p>
+        <div class="proc-line"></div>
+      </div>
+      <div class="proc-step reveal rd3">
+        <span class="proc-num">04</span>
+        <h3 class="proc-title">Scale</h3>
+        <p class="proc-desc">Launch is just the beginning. We monitor, optimize, and scale your results using data, AI, and continuous improvement over time.</p>
+        <div class="proc-line"></div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
 <section id="testimonials">
-  <div class="testimonials-bg"></div>
-  <div class="testimonials-overlay"></div>
-  <div class="testimonials-inner">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-label label-purple">Client Love</span>
-        <h2>What Clients Say</h2>
-        <p>We measure success by real-world outcomes — not just deliverables.</p>
+  <div class="test-bg"></div>
+  <div class="test-inner">
+    <div class="test-header reveal">
+      <div>
+        <div class="sec-label">Client Love</div>
+        <h2 class="sec-title">What Clients <span>Say</span></h2>
       </div>
-      <div class="testimonials-grid">
-        <div class="tcard reveal reveal-delay-1"><div class="stars">★★★★★</div><blockquote>"Icole Digital Media transformed our entire customer acquisition process. The AI agent they built handles over 60% of our incoming leads automatically — our sales team can't imagine working without it now."</blockquote><div class="tcard-author"><div class="avatar a1">JR</div><div><div class="author-name">James Reynolds</div><div class="author-role">CEO, Apex Ventures</div></div></div></div>
-        <div class="tcard reveal reveal-delay-2"><div class="stars">★★★★★</div><blockquote>"The website redesign and marketing campaign exceeded every KPI we set. Traffic tripled in 90 days and our conversion rate doubled. These people know exactly what they're doing."</blockquote><div class="tcard-author"><div class="avatar a2">SM</div><div><div class="author-name">Sofia Martinez</div><div class="author-role">CMO, BrightPath Health</div></div></div></div>
-        <div class="tcard reveal reveal-delay-3"><div class="stars">★★★★★</div><blockquote>"Our custom CRM is a game-changer. Built around exactly how our team works, it's cut admin time by 40% and our pipeline visibility is finally where it needs to be."</blockquote><div class="tcard-author"><div class="avatar a3">TK</div><div><div class="author-name">Trevor Kim</div><div class="author-role">COO, Summit Real Estate</div></div></div></div>
-        <div class="tcard reveal reveal-delay-4"><div class="stars">★★★★★</div><blockquote>"The AI video campaign they produced was unlike anything we'd seen — personalized at scale, visually stunning, and it generated a 4x return on ad spend in the very first month."</blockquote><div class="tcard-author"><div class="avatar a4">AL</div><div><div class="author-name">Ashley Lawson</div><div class="author-role">Founder, Nova Apparel</div></div></div></div>
+      <p style="max-width:320px;color:var(--muted);font-size:0.9rem;line-height:1.75;font-weight:300;">We measure success by the real-world outcomes our clients achieve — not just deliverables.</p>
+    </div>
+    <div class="test-grid">
+      <div class="test-card reveal">
+        <div class="test-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="test-qmark">"</div>
+        <p class="test-text">Icole Digital Media transformed our entire customer acquisition process. The AI agent they built handles over 60% of our incoming leads automatically — our sales team can't imagine working without it now.</p>
+        <div class="test-author"><div class="test-av">JR</div><div><div class="test-name">James Reynolds</div><div class="test-role">CEO, Apex Ventures</div></div></div>
+      </div>
+      <div class="test-card reveal rd1">
+        <div class="test-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="test-qmark">"</div>
+        <p class="test-text">The website redesign and marketing campaign they delivered exceeded every KPI we set. Traffic tripled in 90 days and our conversion rate doubled. These people know exactly what they're doing.</p>
+        <div class="test-author"><div class="test-av">SM</div><div><div class="test-name">Sofia Martinez</div><div class="test-role">CMO, BrightPath Health</div></div></div>
+      </div>
+      <div class="test-card reveal">
+        <div class="test-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="test-qmark">"</div>
+        <p class="test-text">Our custom CRM is a game-changer. Built around exactly how our team works, it's cut admin time by 40% and our pipeline visibility is finally where it needs to be. Genuinely impressive work.</p>
+        <div class="test-author"><div class="test-av">TK</div><div><div class="test-name">Trevor Kim</div><div class="test-role">COO, Summit Real Estate</div></div></div>
+      </div>
+      <div class="test-card reveal rd1">
+        <div class="test-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="test-qmark">"</div>
+        <p class="test-text">The AI video campaign they produced was unlike anything we'd seen — personalized at scale, visually stunning, and it generated a 4x return on ad spend in the very first month alone.</p>
+        <div class="test-author"><div class="test-av">AL</div><div><div class="test-name">Ashley Lawson</div><div class="test-role">Founder, Nova Apparel</div></div></div>
       </div>
     </div>
   </div>
@@ -683,117 +831,475 @@
 <section id="cta">
   <div class="cta-bg"></div>
   <div class="cta-overlay"></div>
+  <div class="cta-glow"></div>
   <div class="cta-content reveal">
-    <h2>Let's Build Something <span>Extraordinary.</span></h2>
-    <p>Whether you're launching something new, scaling an existing operation, or ready to deploy the power of AI — we're ready.</p>
-    <div class="cta-buttons">
-      <a href="#contact" class="btn-primary">Start a Project</a>
-      <a href="#work" class="btn-outline">View Our Work</a>
+    <div class="sec-label">Ready to Scale?</div>
+    <h2 class="cta-h2">Let's Build<br/><span>Something Extraordinary.</span></h2>
+    <p class="cta-sub">Whether you're launching something new, scaling an existing operation, or ready to deploy the power of AI — we're ready to make it happen.</p>
+    <div class="cta-btns">
+      <a href="#contact" class="btn-glow">Start a Project</a>
+      <a href="#work" class="btn-ghost">View Our Work</a>
     </div>
   </div>
 </section>
 
 <!-- CONTACT -->
 <section id="contact">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="section-label label-purple">Get in Touch</span>
-      <h2>Let's Talk About Your Project</h2>
+  <div class="contact-left reveal">
+    <div class="sec-label">Get in Touch</div>
+    <h2 class="sec-title">Let's Talk About<br/>Your <span>Project</span></h2>
+    <p>We'd love to hear about your goals. Whether it's a new website, a marketing campaign, or an end-to-end AI buildout — drop us a message and we'll get back to you within 24 hours.</p>
+    <div class="c-info">
+      <div class="c-item"><div class="c-ico">✉</div><div><div class="c-lbl">Email</div><div class="c-val">hello@icoledigitalmedia.com</div></div></div>
+      <div class="c-item"><div class="c-ico">📞</div><div><div class="c-lbl">Phone</div><div class="c-val">484-719-5115</div></div></div>
+      <div class="c-item"><div class="c-ico">📍</div><div><div class="c-lbl">Location</div><div class="c-val">United States — Remote Worldwide</div></div></div>
     </div>
-    <div class="contact-grid">
-      <div class="contact-info reveal">
-        <p>We'd love to hear about your goals. Drop us a message and we'll get back to you within 24 hours.</p>
-        <div class="contact-item"><div class="contact-icon purple">✉</div><div class="contact-detail"><strong>Email</strong><span>hello@icoledigitalmedia.com</span></div></div>
-        <div class="contact-item"><div class="contact-icon pink">📞</div><div class="contact-detail"><strong>Phone</strong><span>484-719-5115</span></div></div>
-        <div class="contact-item"><div class="contact-icon teal">📍</div><div class="contact-detail"><strong>Location</strong><span>United States — Remote Worldwide</span></div></div>
+  </div>
+  <div class="reveal rd1">
+    <div class="c-form">
+      <div class="f-row">
+        <div class="f-group"><label class="f-label">Your Name</label><input class="f-input" type="text" placeholder="John Smith"/></div>
+        <div class="f-group"><label class="f-label">Your Email</label><input class="f-input" type="email" placeholder="john@company.com"/></div>
       </div>
-      <div class="contact-form reveal reveal-delay-2">
-        <div class="form-row">
-          <div class="form-group"><label>Your Name</label><input type="text" placeholder="Jane Smith"></div>
-          <div class="form-group"><label>Email Address</label><input type="email" placeholder="jane@company.com"></div>
-        </div>
-        <div class="form-group"><label>Company</label><input type="text" placeholder="Your Company"></div>
-        <div class="form-row">
-          <div class="form-group"><label>Service Interest</label><select><option value="">Select a service…</option><option>Web Design & Development</option><option>Marketing Campaigns</option><option>AI Agents</option><option>Custom CRM</option><option>AI Video Production</option><option>Full Package</option></select></div>
-          <div class="form-group"><label>Budget Range</label><select><option value="">Select budget…</option><option>Under $2,500</option><option>$2,500 — $7,500</option><option>$7,500 — $25,000</option><option>$25,000+</option></select></div>
-        </div>
-        <div class="form-group"><label>Message</label><textarea placeholder="Tell us about your project…"></textarea></div>
-        <button class="btn-submit">Send Message →</button>
+      <div class="f-group"><label class="f-label">Company</label><input class="f-input" type="text" placeholder="Your company name"/></div>
+      <div class="f-group"><label class="f-label">Service Interest</label>
+        <select class="f-select">
+          <option value="">Select a service…</option>
+          <option>Web Design & Development</option>
+          <option>Marketing Campaigns</option>
+          <option>AI Agents</option>
+          <option>Custom CRM</option>
+          <option>AI Video Production</option>
+          <option>Full Package</option>
+        </select>
       </div>
+      <div class="f-group"><label class="f-label">Budget Range</label>
+        <select class="f-select">
+          <option value="">Select budget…</option>
+          <option>Under $2,500</option>
+          <option>$2,500 — $7,500</option>
+          <option>$7,500 — $25,000</option>
+          <option>$25,000+</option>
+        </select>
+      </div>
+      <div class="f-group"><label class="f-label">Message</label><textarea class="f-textarea" placeholder="Tell us about your project…"></textarea></div>
+      <button class="f-submit">Send Message →</button>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <span class="footer-logo">Icole.</span>
-      <p>A full-service digital & AI agency. We design, build, and grow brands that lead in the digital era — powered by intelligence.</p>
+  <div class="footer-top">
+    <div>
+      <div class="f-brand-name">Icole<span>.</span></div>
+      <div class="f-brand-desc">A full-service digital & AI agency. We design, build, and grow brands that lead in the digital era — powered by intelligence.</div>
+      <div class="f-socials">
+        <a href="#" class="f-soc">in</a>
+        <a href="#" class="f-soc">X</a>
+        <a href="#" class="f-soc">ig</a>
+        <a href="#" class="f-soc">yt</a>
+      </div>
     </div>
-    <div class="footer-col"><h4>Services</h4><ul><li><a href="#services">Web Design</a></li><li><a href="#services">Marketing</a></li><li><a href="#ai">AI Agents</a></li><li><a href="#ai">Custom CRM</a></li><li><a href="#ai">AI Video</a></li></ul></div>
-    <div class="footer-col"><h4>Company</h4><ul><li><a href="#about">About Us</a></li><li><a href="#work">Our Work</a></li><li><a href="#process">Process</a></li><li><a href="#testimonials">Testimonials</a></li><li><a href="#">Blog</a></li></ul></div>
-    <div class="footer-col"><h4>Get Started</h4><ul><li><a href="#contact">Start a Project</a></li><li><a href="#contact">Free Consultation</a></li><li><a href="#">Case Studies</a></li><li><a href="#">Pricing</a></li></ul></div>
+    <div>
+      <div class="f-col-ttl">Services</div>
+      <ul class="f-links"><li><a href="#services">Web Design</a></li><li><a href="#services">Marketing</a></li><li><a href="#ai">AI Agents</a></li><li><a href="#ai">Custom CRM</a></li><li><a href="#ai">AI Video</a></li></ul>
+    </div>
+    <div>
+      <div class="f-col-ttl">Company</div>
+      <ul class="f-links"><li><a href="#about">About Us</a></li><li><a href="#work">Our Work</a></li><li><a href="#process">Process</a></li><li><a href="#testimonials">Testimonials</a></li><li><a href="#">Blog</a></li></ul>
+    </div>
+    <div>
+      <div class="f-col-ttl">Get Started</div>
+      <ul class="f-links"><li><a href="#contact">Start a Project</a></li><li><a href="#contact">Free Consultation</a></li><li><a href="#">Case Studies</a></li><li><a href="#">Pricing</a></li></ul>
+    </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 Icole Digital Media. All rights reserved.</p>
-    <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Cookie Policy</a></div>
+    <div class="f-copy">© 2025 Icole Digital Media. All rights reserved.</div>
+    <div class="f-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Cookie Policy</a></div>
   </div>
 </footer>
 
 <script>
-/* ─── TYPEWRITER ─── */
-(function() {
-  const el = document.getElementById('typewriter-line');
-  const words = ['Achieve.', 'Dominate.', 'Innovate.', 'Scale.', 'Achieve.'];
-  let wordIdx = 0, charIdx = 0, deleting = false;
+// Loader
+let pct=0;
+const pctEl=document.getElementById('l-pct');
+const counter=setInterval(()=>{pct+=Math.floor(Math.random()*12)+4;if(pct>=100){pct=100;clearInterval(counter);setTimeout(()=>document.getElementById('loader').classList.add('hide'),300);}pctEl.textContent=pct+'%';},100);
 
-  function getWidth(text) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    ctx.font = window.getComputedStyle(el).font;
-    return ctx.measureText(text).width;
+// Cursor
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function tick(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+document.querySelectorAll('a,button,.svc-card,.work-card,.test-card,.ai-feat').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='20px';cur.style.height='20px';ring.style.width='60px';ring.style.height='60px';});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';ring.style.width='38px';ring.style.height='38px';});
+});
+
+// Services tab switching
+function switchTab(index) {
+  document.querySelectorAll('.svc-tab').forEach((t,i) => t.classList.toggle('active', i===index));
+  document.querySelectorAll('.svc-panel').forEach((p,i) => p.classList.toggle('active', i===index));
+}
+
+// Nav scroll
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>80));
+
+// ====== CANVAS ANIMATIONS ======
+function initCanvas(canvas, type) {
+  const wrap = canvas.parentElement;
+  const dpr = window.devicePixelRatio || 1;
+  function resize() {
+    canvas.width = wrap.offsetWidth * dpr;
+    canvas.height = wrap.offsetHeight * dpr;
+    canvas.style.width = wrap.offsetWidth + 'px';
+    canvas.style.height = wrap.offsetHeight + 'px';
   }
+  resize();
+  window.addEventListener('resize', resize);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = () => wrap.offsetWidth;
+  const H = () => wrap.offsetHeight;
 
-  function type() {
-    const word = words[wordIdx];
-    if (!deleting) {
-      charIdx++;
-      el.textContent = word.slice(0, charIdx);
-      el.style.width = getWidth(word.slice(0, charIdx)) + 'px';
-      el.style.borderRight = '3px solid';
-      el.classList.add('cursor-blink');
-      if (charIdx === word.length) {
-        if (wordIdx === words.length - 1) {
-          setTimeout(() => { el.style.borderRight = 'none'; el.classList.remove('cursor-blink'); }, 1200);
-          return;
-        }
-        setTimeout(() => { deleting = true; type(); }, 1800);
-        return;
-      }
-    } else {
-      charIdx--;
-      el.textContent = word.slice(0, charIdx);
-      el.style.width = charIdx > 0 ? getWidth(word.slice(0, charIdx)) + 'px' : '0px';
-      if (charIdx === 0) {
-        deleting = false;
-        wordIdx++;
-        setTimeout(type, 300);
-        return;
-      }
+  if (type === 'neural') {
+    // Neural network with glowing nodes and animated connections
+    const nodes = [];
+    for (let i = 0; i < 28; i++) {
+      nodes.push({ x: Math.random() * W(), y: Math.random() * H(), vx: (Math.random()-.5)*.4, vy: (Math.random()-.5)*.4, r: Math.random()*2.5+1.5, pulse: Math.random()*Math.PI*2 });
     }
-    setTimeout(type, deleting ? 55 : 90);
+    let t = 0;
+    function draw() {
+      const w = W(), h = H();
+      ctx.clearRect(0,0,w,h);
+      // dark gradient bg
+      const bg = ctx.createLinearGradient(0,0,w,h);
+      bg.addColorStop(0,'#07080d'); bg.addColorStop(1,'#0c1020');
+      ctx.fillStyle = bg; ctx.fillRect(0,0,w,h);
+      // draw connections
+      for (let i=0;i<nodes.length;i++) {
+        for (let j=i+1;j<nodes.length;j++) {
+          const dx=nodes[j].x-nodes[i].x, dy=nodes[j].y-nodes[i].y;
+          const dist=Math.sqrt(dx*dx+dy*dy);
+          if (dist<130) {
+            const alpha = (1-dist/130)*0.35;
+            const grad = ctx.createLinearGradient(nodes[i].x,nodes[i].y,nodes[j].x,nodes[j].y);
+            grad.addColorStop(0,`rgba(91,139,255,${alpha})`);
+            grad.addColorStop(1,`rgba(139,92,246,${alpha})`);
+            ctx.beginPath(); ctx.strokeStyle=grad; ctx.lineWidth=0.8;
+            ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y); ctx.stroke();
+            // data packet traveling along edge
+            const progress = ((t*0.4 + i*37)%100)/100;
+            const px = nodes[i].x + dx*progress, py = nodes[i].y + dy*progress;
+            if (dist < 100) {
+              ctx.beginPath(); ctx.arc(px,py,1.5,0,Math.PI*2);
+              ctx.fillStyle=`rgba(34,211,238,${alpha*2})`; ctx.fill();
+            }
+          }
+        }
+      }
+      // draw nodes
+      nodes.forEach((n,i) => {
+        n.pulse += 0.04;
+        const glow = ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*5);
+        glow.addColorStop(0,'rgba(91,139,255,0.6)'); glow.addColorStop(1,'rgba(91,139,255,0)');
+        ctx.beginPath(); ctx.arc(n.x,n.y,n.r*4,0,Math.PI*2); ctx.fillStyle=glow; ctx.fill();
+        ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+        ctx.fillStyle=i%4===0?'#22d3ee':i%3===0?'#8b5cf6':'#5b8bff'; ctx.fill();
+        n.x+=n.vx; n.y+=n.vy;
+        if(n.x<0||n.x>w) n.vx*=-1;
+        if(n.y<0||n.y>h) n.vy*=-1;
+      });
+      t++;
+      requestAnimationFrame(draw);
+    }
+    draw();
   }
-  setTimeout(type, 1400);
-})();
 
-/* ─── SCROLL REVEAL ─── */
-(function() {
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-})();
+  else if (type === 'wave') {
+    // Flowing gradient wave — marketing energy
+    let t = 0;
+    function draw() {
+      const w=W(),h=H();
+      ctx.clearRect(0,0,w,h);
+      const bg=ctx.createLinearGradient(0,0,0,h);
+      bg.addColorStop(0,'#07080d'); bg.addColorStop(1,'#090c18');
+      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+      // multiple layered waves
+      const waves = [
+        {amp:28,freq:0.018,speed:0.025,color:'rgba(59,111,245,0.5)',lw:2,yBase:h*0.35},
+        {amp:22,freq:0.024,speed:0.018,color:'rgba(139,92,246,0.45)',lw:1.5,yBase:h*0.5},
+        {amp:18,freq:0.030,speed:0.032,color:'rgba(34,211,238,0.4)',lw:1.5,yBase:h*0.65},
+        {amp:34,freq:0.014,speed:0.014,color:'rgba(91,139,255,0.25)',lw:3,yBase:h*0.42},
+      ];
+      waves.forEach(wave => {
+        ctx.beginPath(); ctx.strokeStyle=wave.color; ctx.lineWidth=wave.lw;
+        for (let x=0;x<=w;x+=2) {
+          const y = wave.yBase + Math.sin(x*wave.freq + t*wave.speed)*wave.amp + Math.sin(x*wave.freq*1.7+t*wave.speed*0.6)*wave.amp*0.4;
+          x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        }
+        ctx.stroke();
+        // filled area under wave
+        ctx.lineTo(w,h); ctx.lineTo(0,h); ctx.closePath();
+        const fill=ctx.createLinearGradient(0,wave.yBase-wave.amp,0,h);
+        fill.addColorStop(0,wave.color.replace('0.','0.08')); fill.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.fillStyle=fill; ctx.fill();
+      });
+      // rising bar chart silhouette
+      const bars=8;
+      for(let i=0;i<bars;i++){
+        const bh=(Math.sin(t*0.02+i*0.8)*0.5+0.5)*h*0.45+h*0.05;
+        const bw=w/bars*0.55, bx=i*(w/bars)+w/bars*0.22;
+        const bg2=ctx.createLinearGradient(0,h-bh,0,h);
+        bg2.addColorStop(0,`rgba(91,139,255,0.18)`); bg2.addColorStop(1,`rgba(59,111,245,0.04)`);
+        ctx.fillStyle=bg2; ctx.fillRect(bx,h-bh,bw,bh);
+        // top glow
+        ctx.fillStyle='rgba(91,139,255,0.5)'; ctx.fillRect(bx,h-bh,bw,2);
+      }
+      t++;
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  else if (type === 'bars') {
+    // Real-time chart animation — analytics dashboard
+    let t=0;
+    const series = Array.from({length:40},(_,i)=>({x:i,y:Math.random()}));
+    function draw(){
+      const w=W(),h=H();
+      ctx.clearRect(0,0,w,h);
+      // bg
+      ctx.fillStyle='#07090f'; ctx.fillRect(0,0,w,h);
+      // grid lines
+      for(let i=1;i<5;i++){
+        const y=h*0.15+h*0.65*(i/5);
+        ctx.beginPath(); ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1;
+        ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke();
+      }
+      // update series
+      series.shift(); series.push({x:series[series.length-1].x+1,y:Math.max(0.05,Math.min(0.95,series[series.length-1].y+(Math.random()-.48)*.12))});
+      const sw=w/series.length;
+      // area fill
+      ctx.beginPath();
+      series.forEach((p,i)=>{
+        const px=i*sw, py=h*0.8-p.y*h*0.6;
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      });
+      ctx.lineTo(w,h*0.85); ctx.lineTo(0,h*0.85); ctx.closePath();
+      const aFill=ctx.createLinearGradient(0,h*0.1,0,h*0.85);
+      aFill.addColorStop(0,'rgba(59,111,245,0.35)'); aFill.addColorStop(1,'rgba(59,111,245,0)');
+      ctx.fillStyle=aFill; ctx.fill();
+      // line
+      ctx.beginPath();
+      series.forEach((p,i)=>{const px=i*sw,py=h*0.8-p.y*h*0.6; i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);});
+      const lg=ctx.createLinearGradient(0,0,w,0);
+      lg.addColorStop(0,'#3b6ff5'); lg.addColorStop(0.5,'#8b5cf6'); lg.addColorStop(1,'#22d3ee');
+      ctx.strokeStyle=lg; ctx.lineWidth=2.5; ctx.lineJoin='round'; ctx.stroke();
+      // dot at tip
+      const last=series[series.length-1];
+      const lx=(series.length-1)*sw, ly=h*0.8-last.y*h*0.6;
+      const dg=ctx.createRadialGradient(lx,ly,0,lx,ly,10);
+      dg.addColorStop(0,'rgba(34,211,238,0.8)'); dg.addColorStop(1,'rgba(34,211,238,0)');
+      ctx.beginPath(); ctx.arc(lx,ly,10,0,Math.PI*2); ctx.fillStyle=dg; ctx.fill();
+      ctx.beginPath(); ctx.arc(lx,ly,3,0,Math.PI*2); ctx.fillStyle='#22d3ee'; ctx.fill();
+      // second series
+      const s2=series.map((p,i)=>({y:Math.sin(t*0.03+i*0.25)*0.3+0.5}));
+      ctx.beginPath();
+      s2.forEach((p,i)=>{const px=i*sw,py=h*0.8-p.y*h*0.5; i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);});
+      ctx.strokeStyle='rgba(139,92,246,0.5)'; ctx.lineWidth=1.5; ctx.stroke();
+      t++;
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  else if (type === 'particles') {
+    // Elegant floating particles — luxury brand
+    const particles=[];
+    for(let i=0;i<70;i++) particles.push({
+      x:Math.random()*W(), y:Math.random()*H(),
+      vx:(Math.random()-.5)*.3, vy:(Math.random()-.5)*.3,
+      r:Math.random()*1.8+0.4, alpha:Math.random()*0.6+0.2,
+      hue:Math.random()>0.6?240+Math.random()*40:270+Math.random()*30
+    });
+    let t=0;
+    function draw(){
+      const w=W(),h=H();
+      ctx.clearRect(0,0,w,h);
+      // deep bg with faint radial center glow
+      const bg=ctx.createRadialGradient(w*0.5,h*0.4,0,w*0.5,h*0.5,w*0.8);
+      bg.addColorStop(0,'#0e0c1a'); bg.addColorStop(1,'#07080d');
+      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+      // orbiting ring
+      const cx=w/2, cy=h/2;
+      ctx.beginPath();
+      ctx.ellipse(cx,cy,w*0.32,h*0.18,t*0.003,0,Math.PI*2);
+      ctx.strokeStyle='rgba(139,92,246,0.15)'; ctx.lineWidth=1; ctx.stroke();
+      ctx.beginPath();
+      ctx.ellipse(cx,cy,w*0.44,h*0.26,-t*0.002,0,Math.PI*2);
+      ctx.strokeStyle='rgba(91,139,255,0.1)'; ctx.lineWidth=1; ctx.stroke();
+      // particles
+      particles.forEach(p=>{
+        const glow=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*4);
+        glow.addColorStop(0,`hsla(${p.hue},80%,70%,${p.alpha*0.5})`);
+        glow.addColorStop(1,'transparent');
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r*4,0,Math.PI*2); ctx.fillStyle=glow; ctx.fill();
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=`hsla(${p.hue},80%,75%,${p.alpha})`; ctx.fill();
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<-10) p.x=w+10; if(p.x>w+10) p.x=-10;
+        if(p.y<-10) p.y=h+10; if(p.y>h+10) p.y=-10;
+      });
+      // central glow orb
+      const og=ctx.createRadialGradient(cx,cy,0,cx,cy,80);
+      og.addColorStop(0,'rgba(139,92,246,0.3)'); og.addColorStop(1,'transparent');
+      ctx.beginPath(); ctx.arc(cx,cy,80,0,Math.PI*2); ctx.fillStyle=og; ctx.fill();
+      t++;
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  else if (type === 'rings') {
+    // Expanding rings — AI video / broadcast
+    let t=0;
+    const rings=Array.from({length:6},(_,i)=>({r:i*40,alpha:1-i/6,speed:0.6}));
+    const sparks=Array.from({length:18},(_,i)=>({angle:i*(Math.PI*2/18),r:0,speed:Math.random()*1.5+0.8,trail:[]}));
+    function draw(){
+      const w=W(),h=H();
+      ctx.clearRect(0,0,w,h);
+      const bg=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,w*0.7);
+      bg.addColorStop(0,'#0a0814'); bg.addColorStop(1,'#07080d');
+      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+      const cx=w/2, cy=h/2;
+      // pulse rings
+      rings.forEach(ring=>{
+        ring.r+=ring.speed;
+        if(ring.r>Math.max(w,h)*0.75){ ring.r=0; ring.alpha=0.9; }
+        ring.alpha=Math.max(0,ring.alpha-0.003);
+        ctx.beginPath();
+        ctx.arc(cx,cy,ring.r,0,Math.PI*2);
+        const col=ring.r%120<60?`rgba(59,111,245,${ring.alpha*0.6})`:`rgba(139,92,246,${ring.alpha*0.6})`;
+        ctx.strokeStyle=col; ctx.lineWidth=1.5; ctx.stroke();
+      });
+      // rotating sparks
+      sparks.forEach(s=>{
+        s.angle+=0.012; s.r+=s.speed;
+        if(s.r>Math.min(w,h)*0.6){ s.r=10+Math.random()*20; }
+        const sx=cx+Math.cos(s.angle+t*0.01)*s.r;
+        const sy=cy+Math.sin(s.angle+t*0.01)*s.r;
+        s.trail.push({x:sx,y:sy});
+        if(s.trail.length>12) s.trail.shift();
+        s.trail.forEach((pt,i)=>{
+          const a=(i/s.trail.length)*0.5;
+          ctx.beginPath(); ctx.arc(pt.x,pt.y,0.8,0,Math.PI*2);
+          ctx.fillStyle=`rgba(34,211,238,${a})`; ctx.fill();
+        });
+        const sg=ctx.createRadialGradient(sx,sy,0,sx,sy,5);
+        sg.addColorStop(0,'rgba(34,211,238,0.9)'); sg.addColorStop(1,'transparent');
+        ctx.beginPath(); ctx.arc(sx,sy,5,0,Math.PI*2); ctx.fillStyle=sg; ctx.fill();
+      });
+      // center orb
+      const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,38);
+      cg.addColorStop(0,'rgba(91,139,255,0.9)'); cg.addColorStop(0.5,'rgba(139,92,246,0.4)'); cg.addColorStop(1,'transparent');
+      ctx.beginPath(); ctx.arc(cx,cy,38,0,Math.PI*2); ctx.fillStyle=cg; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx,cy,14,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.95)'; ctx.fill();
+      // play triangle
+      ctx.beginPath(); ctx.moveTo(cx+6,cy); ctx.lineTo(cx-4,cy-7); ctx.lineTo(cx-4,cy+7); ctx.closePath();
+      ctx.fillStyle='#07080d'; ctx.fill();
+      t++;
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  else if (type === 'grid') {
+    // Flowing data grid — AI support / chatbot
+    let t=0;
+    const COLS=14, ROWS=9;
+    const cells=[];
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++)
+      cells.push({r,c,val:Math.random(),speed:Math.random()*0.03+0.005,phase:Math.random()*Math.PI*2});
+    const msgs=[
+      {x:0.15,y:0.25,w:0.4,h:0.09,side:'left',a:0,delay:0},
+      {x:0.45,y:0.42,w:0.38,h:0.09,side:'right',a:0,delay:60},
+      {x:0.12,y:0.58,w:0.45,h:0.09,side:'left',a:0,delay:120},
+      {x:0.42,y:0.74,w:0.35,h:0.09,side:'right',a:0,delay:180},
+    ];
+    function draw(){
+      const w=W(),h=H();
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle='#07090e'; ctx.fillRect(0,0,w,h);
+      // animated grid cells
+      const cw=w/COLS, ch=h/ROWS;
+      cells.forEach(cell=>{
+        cell.val=0.5+Math.sin(t*cell.speed+cell.phase)*0.5;
+        const a=cell.val*0.18;
+        const blue=cell.val>0.7, violet=cell.val>0.85;
+        ctx.fillStyle=violet?`rgba(139,92,246,${a*1.8})`:blue?`rgba(91,139,255,${a*1.4})`:`rgba(59,111,245,${a})`;
+        ctx.fillRect(cell.c*cw+1,cell.r*ch+1,cw-2,ch-2);
+        if(cell.val>0.92){
+          ctx.fillStyle='rgba(34,211,238,0.7)';
+          ctx.fillRect(cell.c*cw+cw/2-1,cell.r*ch+ch/2-1,2,2);
+        }
+      });
+      // grid lines
+      for(let c=0;c<=COLS;c++){ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.moveTo(c*cw,0);ctx.lineTo(c*cw,h);ctx.stroke();}
+      for(let r=0;r<=ROWS;r++){ctx.beginPath();ctx.moveTo(0,r*ch);ctx.lineTo(w,r*ch);ctx.stroke();}
+      // chat bubbles
+      msgs.forEach(m=>{
+        m.a=Math.min(1,m.a+(t>m.delay?0.04:0));
+        if(m.a<=0) return;
+        const bx=m.x*w, by=m.y*h, bw=m.w*w, bh=m.h*h, br=8;
+        ctx.save(); ctx.globalAlpha=m.a;
+        ctx.fillStyle=m.side==='left'?'rgba(59,111,245,0.25)':'rgba(139,92,246,0.2)';
+        ctx.strokeStyle=m.side==='left'?'rgba(91,139,255,0.5)':'rgba(139,92,246,0.4)';
+        ctx.lineWidth=1;
+        ctx.beginPath();
+        ctx.roundRect(bx,by,bw,bh,br);
+        ctx.fill(); ctx.stroke();
+        // text lines
+        ctx.fillStyle=m.side==='left'?'rgba(91,139,255,0.8)':'rgba(200,180,255,0.7)';
+        ctx.fillRect(bx+10,by+bh/2-1,bw*0.55,2);
+        ctx.fillStyle='rgba(255,255,255,0.2)';
+        ctx.fillRect(bx+10,by+bh/2+5,bw*0.35,1.5);
+        ctx.restore();
+      });
+      // scanning line
+      const scanY=(t%200)/200*h;
+      const sg=ctx.createLinearGradient(0,scanY-20,0,scanY+20);
+      sg.addColorStop(0,'transparent'); sg.addColorStop(0.5,'rgba(34,211,238,0.15)'); sg.addColorStop(1,'transparent');
+      ctx.fillStyle=sg; ctx.fillRect(0,scanY-20,w,40);
+      t++;
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+}
+
+// Video showcase play button
+const vsPlayBtn = document.getElementById('vsPlayBtn');
+const vsOverlay = document.getElementById('vsOverlay');
+const vsIframeWrap = document.getElementById('vsIframeWrap');
+const vsIframe = document.getElementById('vsIframe');
+if(vsPlayBtn){
+  vsPlayBtn.addEventListener('click', () => {
+    // Stock AI production demo video from YouTube
+    vsIframe.src = 'https://www.youtube.com/embed/pBk4NYhaKZg?autoplay=1&rel=0&modestbranding=1&color=white';
+    vsIframeWrap.style.display = 'block';
+    vsOverlay.classList.add('hidden');
+  });
+}
+
+// Init all canvases
+document.querySelectorAll('.work-canvas-wrap canvas').forEach(canvas=>{
+  initCanvas(canvas, canvas.dataset.type);
+});
+
+// Reveal
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
 </script>
 </body>
 </html>
